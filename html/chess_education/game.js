@@ -135,7 +135,6 @@ class Game{
 
 		this.forward = 0;
 		this.turn = 0;
-		// this.lock = true;
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
 				case KEY_W : this.forward = 1;break;
@@ -275,19 +274,19 @@ class Game{
 		turn = -turn;
 
 		if (forward>0.3){
-			if (this.player.action!='Walking' && this.player.action!='Running') this.player.action = 'Walking';
+			if (this.player.action!=='Walking' && this.player.action!=='Running') this.player.action = 'Walking';
 		}else if (forward<-0.3){
-			if (this.player.action!='Walking Backwards') this.player.action = 'Walking Backwards';
+			if (this.player.action!=='Walking Backwards') this.player.action = 'Walking Backwards';
 		}else{
 			forward = 0;
 			if (Math.abs(turn)>0.1){
-				if (this.player.action != 'Turn') this.player.action = 'Turn';
-			}else if (this.player.action!="Idle"){
+				if (this.player.action !== 'Turn') this.player.action = 'Turn';
+			}else if (this.player.action!=="Idle"){
 				this.player.action = 'Idle';
 			}
 		}
 
-		if (forward==0 && turn==0){
+		if (forward === 0 && turn === 0){
 			delete this.player.motion;
 		}else{
 			this.player.motion = { forward, turn };
@@ -349,7 +348,7 @@ class Game{
 	}
 
 	updateRemotePlayers(dt){
-		if (this.remoteData===undefined || this.remoteData.length == 0 || this.player===undefined || this.player.id===undefined) return;
+		if (this.remoteData === undefined || this.remoteData.length === 0 || this.player === undefined || this.player.id === undefined) return;
 
 		const newPlayers = [];
 		const game = this;
@@ -358,17 +357,17 @@ class Game{
 		const remoteColliders = [];
 
 		this.remoteData.forEach( function(data){
-			if (game.player.id != data.id){
+			if (game.player.id !== data.id){
 				//Is this player being initialised?
 				let iplayer;
 				game.initialisingPlayers.forEach( function(player){
-					if (player.id == data.id) iplayer = player;
+					if (player.id === data.id) iplayer = player;
 				});
 				//If not being initialised check the remotePlayers array
 				if (iplayer===undefined){
 					let rplayer;
 					game.remotePlayers.forEach( function(player){
-						if (player.id == data.id) rplayer = player;
+						if (player.id === data.id) rplayer = player;
 					});
 					if (rplayer===undefined){
 						//Initialise player
@@ -383,7 +382,7 @@ class Game{
 		});
 
 		this.scene.children.forEach( function(object){
-			if (object.userData.remotePlayer && game.getRemotePlayerById(object.userData.id)==undefined){
+			if (object.userData.remotePlayer && game.getRemotePlayerById(object.userData.id)===undefined){
 				game.scene.remove(object);
 			}
 		});
@@ -407,7 +406,7 @@ class Game{
 
 		const target=raycaster.intersectObjects(this.colliders)
 		if(target.length>0){
-			if (target[0].object.parent.name=="KH_TowerHigh003"){
+			if (target[0].object.parent.name === "KH_TowerHigh003"){
 				alert("start training!");
 			}
 		}
@@ -418,7 +417,7 @@ class Game{
 		if (intersects.length>0){
 			const object = intersects[0].object;
 			const players = this.remotePlayers.filter( function(player){
-				if (player.collider!==undefined && player.collider==object){
+				if (player.collider!==undefined && player.collider === object){
 					return true;
 				}
 			});
@@ -434,7 +433,7 @@ class Game{
 			}
 		}else{
 			//Is the chat panel visible?
-			if (chat.style.bottom=='0px' && (window.innerHeight - event.clientY)>40){
+			if (chat.style.bottom === '0px' && (window.innerHeight - event.clientY)>40){
 				console.log("onMouseDown: No player found");
 				if (this.speechBubble.mesh.parent!==null) this.speechBubble.mesh.parent.remove(this.speechBubble.mesh);
 				delete this.speechBubble.player;
@@ -448,13 +447,13 @@ class Game{
 	}
 
 	getRemotePlayerById(id){
-		if (this.remotePlayers===undefined || this.remotePlayers.length==0) return;
+		if (this.remotePlayers===undefined || this.remotePlayers.length === 0) return;
 
 		const players = this.remotePlayers.filter(function(player){
-			if (player.id == id) return true;
+			if (player.id === id) return true;
 		});
 
-		if (players.length==0) return;
+		if (players.length===0) return;
 
 		return players[0];
 	}
@@ -467,9 +466,9 @@ class Game{
 
 		this.updateRemotePlayers(dt);
 
-		if (this.player.mixer!=undefined && this.mode==this.modes.ACTIVE) this.player.mixer.update(dt);
+		if (this.player.mixer !== undefined && this.mode === this.modes.ACTIVE) this.player.mixer.update(dt);
 
-		if (this.player.action=='Walking'){
+		if (this.player.action === 'Walking'){
 			const elapsedTime = Date.now() - this.player.actionTime;
 			if (elapsedTime>1000 && this.player.motion.forward>0){
 				this.player.action = 'Running';
@@ -478,10 +477,10 @@ class Game{
 
 		if (this.player.motion !== undefined) this.player.move(dt);
 
-		if (this.cameras!=undefined && this.cameras.active!=undefined && this.player!==undefined && this.player.object!==undefined){
+		if (this.cameras !== undefined && this.cameras.active !== undefined && this.player !== undefined && this.player.object !== undefined){
 			this.camera.position.lerp(this.cameras.active.getWorldPosition(new THREE.Vector3()), 0.05);
 			const pos = this.player.object.position.clone();
-			if (this.cameras.active==this.cameras.chat){
+			if (this.cameras.active === this.cameras.chat){
 				pos.y += 200;
 			}else{
 				pos.y += 300;
@@ -586,7 +585,7 @@ class Player{
 
 	set action(name){
 		//Make a copy of the clip if this is a remote player
-		if (this.actionName == name) return;
+		if (this.actionName === name) return;
 		const clip = (this.local) ? this.animations[name] : THREE.AnimationClip.parse(THREE.AnimationClip.toJSON(this.animations[name]));
 		const action = this.mixer.clipAction( clip );
         action.time = 0;
@@ -608,7 +607,7 @@ class Player{
 		if (this.game.remoteData.length>0){
 			let found = false;
 			for(let data of this.game.remoteData){
-				if (data.id != this.id) continue;
+				if (data.id !== this.id) continue;
 				//Found the player
 				this.object.position.set( data.x, data.y, data.z );
 				const euler = new THREE.Euler(data.pb, data.heading, data.pb);
@@ -635,19 +634,19 @@ class PlayerLocal extends Player{
 		});
 		socket.on('deletePlayer', function(data){
 			const players = game.remotePlayers.filter(function(player){
-				if (player.id == data.id){
+				if (player.id === data.id){
 					return player;
 				}
 			});
 			if (players.length>0){
 				let index = game.remotePlayers.indexOf(players[0]);
-				if (index!=-1){
+				if (index !== -1){
 					game.remotePlayers.splice( index, 1 );
 					game.scene.remove(players[0].object);
 				}
             }else{
                 index = game.initialisingPlayers.indexOf(data.id);
-                if (index!=-1){
+                if (index !== -1){
                     const player = game.initialisingPlayers[index];
                     player.deleted = true;
                     game.initialisingPlayers.splice(index, 1);
@@ -714,7 +713,7 @@ class PlayerLocal extends Player{
 			const intersect = raycaster.intersectObjects([...colliders,...this.game.remoteColliders]);
 			if (intersect.length>0){
 				if (intersect[0].distance<50) blocked = true;
-				if (intersect[0].distance<500 && intersect[0].object.parent.name=="KH_TowerHigh003"){
+				if (intersect[0].distance<500 && intersect[0].object.parent.name === "KH_TowerHigh003"){
 					alert("You found the tower!");
 					this.object.position.set(7788, -20, -4790);
 					this.object.rotation.set(3.14,-0.11,3.14);
@@ -727,10 +726,12 @@ class PlayerLocal extends Player{
 
 		if (!blocked){
 			if (this.motion.forward>0){
-				const speed = (this.action=='Running') ? 500 : 150;
-				this.object.translateZ(dt*speed);
+				// const speed = (this.action === 'Running') ? 500 : 150;
+				const speed = (this.action === 'Running') ? 1000 : 300;
+
+				this.object.translateZ(dt * speed);
 			}else{
-				this.object.translateZ(-dt*30);
+				this.object.translateZ(-dt * 300);
 			}
 		}
 
@@ -772,7 +773,7 @@ class PlayerLocal extends Player{
 					this.velocityY = 0;
 				}else if (targetY < this.object.position.y){
 					//Falling
-					if (this.velocityY==undefined) this.velocityY = 0;
+					if (this.velocityY === undefined) this.velocityY = 0;
 					this.velocityY += dt * gravity;
 					this.object.position.y -= this.velocityY;
 					if (this.object.position.y < targetY){
@@ -873,7 +874,7 @@ class SpeechBubble{
 			}
 		});
 
-		if (line != '') lines.push(line);
+		if (line !== '') lines.push(line);
 
 		let y = (this.config.height - lines.length * lineHeight)/2;
 
