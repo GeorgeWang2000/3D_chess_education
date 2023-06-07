@@ -718,6 +718,9 @@ class PlayerLocal extends Player{
 					alert("You found the tower!");
 					this.object.position.set(7788, -20, -4790);
 					this.object.rotation.set(3.14,-0.11,3.14);
+					game.turn = 0;
+					game.forward = 0;
+					game.playerControl(0,0);
 				}
 			}
 		}
