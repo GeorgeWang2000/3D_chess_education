@@ -215,6 +215,15 @@ class Game{
 					game.colliders.push(child);
 				})
 			})
+			gltfLoader.load("./assets/gltf/robert_the_kitchenware_robot.glb",function(gltf){
+				gltf.scene.position.set(3722,0,-973);
+				gltf.scene.scale.set(200,200,200);
+				gltf.scene.name="robot"
+				game.scene.add(gltf.scene);
+				gltf.scene.traverse( function ( child ) {
+					game.colliders.push(child);
+				})
+			})
 
 			const textureLoader = new THREE.TextureLoader();
 			let materials=[
