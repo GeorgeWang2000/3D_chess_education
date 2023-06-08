@@ -153,6 +153,13 @@ class Game{
 			}
 			this.playerControl(this.forward, this.turn);
 		})
+
+		window.addEventListener('keydown',ev => {
+			switch (ev.code) {
+				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y)
+			}
+		})
+
 		// this.joystick = new JoyStick({
 		// 	onMove: this.playerControl,
 		// 	game: this
@@ -217,25 +224,25 @@ class Game{
 			})
 
 			const textureLoader = new THREE.TextureLoader();
-			let materials=[
-				new THREE.MeshBasicMaterial({color:0x00ff00,visible:true}),
-				new THREE.MeshBasicMaterial({
-					map:textureLoader.load('./assets/images/air.jpg'),
-					side:THREE.BackSide
-				})
-			];
-			let material=new THREE.MeshBasicMaterial({
-				color:0x00ff00,
-				visible:true,
-				map:textureLoader.load('./assets/images/air.jpg'),
-				side:THREE.FrontSide
-			});
-			let board=new THREE.Mesh(new THREE.BoxGeometry(700,700,100),material);
-			board.position.set(6220,300,-373);
-			board.name="board"
 
-			game.scene.add(board);
-			board.traverse( function ( child ) {
+			var course0 = textureLoader.load('./assets/images/course0.jpg')
+			var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
+
+			var materials = [
+				brownMaterial,
+				brownMaterial,
+				brownMaterial,
+				brownMaterial,
+				brownMaterial,
+				new THREE.MeshPhongMaterial({map:course0}),
+			]
+
+			var box = new THREE.BoxGeometry(700,700,100);
+			var board1 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board1.position.set(6220,300,-373);
+			board1.name="board1"
+			game.scene.add(board1);
+			board1.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
 
