@@ -88,6 +88,13 @@ class Game{
 		});
 	}
 
+	calculateDistance(obj1, obj2) {
+		var dx = obj1.position.x - obj2.position.x
+		var dy = obj1.position.y - obj2.position.y
+		var dz = obj1.position.z - obj2.position.z
+		return Math.sqrt(dx * dx + dy * dy + dz * dz)
+	}
+
 	set activeCamera(object){
 		this.cameras.active = object;
 	}
@@ -223,7 +230,7 @@ class Game{
 				})
 			})
 			gltfLoader.load("./assets/gltf/robert_the_kitchenware_robot.glb",function(gltf){
-				gltf.scene.position.set(2389,0,-9831);
+				gltf.scene.position.set(3496,0,-2076);
 				// gltf.scene.rotation.set(0,Math.PI,0)
 				gltf.scene.scale.set(200,200,200);
 				gltf.scene.name="robot"
@@ -791,7 +798,7 @@ class PlayerLocal extends Player{
 		var dx = obj1.position.x - obj2.position.x
 		var dy = obj1.position.y - obj2.position.y
 		var dz = obj1.position.z - obj2.position.z
-		return Math.sqrt(dx*dx + dy * dy + dz * dz)
+		return Math.sqrt(dx * dx + dy * dy + dz * dz)
 	}
 
 	move(dt){
