@@ -235,7 +235,7 @@ class Game{
 
 			const textureLoader = new THREE.TextureLoader();
 
-			var course0 = textureLoader.load('./assets/images/course0.jpg')
+			var course1 = textureLoader.load('./assets/images/course1.jpg')
 			// var course1 = textureLoader.load('a')
 			var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
 
@@ -245,21 +245,12 @@ class Game{
 				brownMaterial,
 				brownMaterial,
 				brownMaterial,
-				new THREE.MeshPhongMaterial({map:course0}),
+				new THREE.MeshPhongMaterial({map:course1}),
 			]
 
 			var box = new THREE.BoxGeometry(700,700,100);
-			var board0 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
-			board0.position.set(6220,300,-373);
-			board0.name="board0"
-			game.scene.add(board0);
-			board0.traverse( function ( child ) {
-				game.colliders.push(child);
-			})
-
 			var board1 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
-			board1.position.set(8127,300,-1570);
-			board1.rotation.set(0,Math.PI/2,0)
+			board1.position.set(6220,300,-373);
 			board1.name="board1"
 			game.scene.add(board1);
 			board1.traverse( function ( child ) {
@@ -267,7 +258,7 @@ class Game{
 			})
 
 			var board2 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
-			board2.position.set(8127,300,-4350);
+			board2.position.set(8127,300,-1570);
 			board2.rotation.set(0,Math.PI/2,0)
 			board2.name="board2"
 			game.scene.add(board2);
@@ -276,11 +267,63 @@ class Game{
 			})
 
 			var board3 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
-			board3.position.set(8127,300,-8061);
+			board3.position.set(8127,300,-4350);
 			board3.rotation.set(0,Math.PI/2,0)
 			board3.name="board3"
 			game.scene.add(board3);
 			board3.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board4 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board4.position.set(8127,300,-8061);
+			board4.rotation.set(0,Math.PI/2,0)
+			board4.name="board4"
+			game.scene.add(board4);
+			board4.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board5 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board5.position.set(1349,300,-482);
+			board5.name="board5"
+			game.scene.add(board5);
+			board5.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board6 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board6.position.set(1349,300,-482);
+			board6.name="board6"
+			game.scene.add(board6);
+			board6.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board7 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board7.position.set(-1655,300,-2740);
+			board7.rotation.set(0,-Math.PI/2,0)
+			board7.name="board7"
+			game.scene.add(board7);
+			board7.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board8 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board8.position.set(-1607,300,-4756);
+			board8.rotation.set(0,-Math.PI/2,0)
+			board8.name="board8"
+			game.scene.add(board8);
+			board8.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board9 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board9.position.set(-1597,300,-7492);
+			board9.rotation.set(0,-Math.PI/2,0)
+			board9.name="board9"
+			game.scene.add(board9);
+			board9.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
 
