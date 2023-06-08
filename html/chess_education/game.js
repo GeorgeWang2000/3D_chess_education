@@ -2,6 +2,10 @@ const KEY_W = "KeyW";
 const KEY_S = "KeyS";
 const KEY_A = "KeyA";
 const KEY_D = "KeyD";
+
+
+
+
 class Game{
 	constructor(){
 		if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -76,6 +80,7 @@ class Game{
 			console.error(JSON.stringify(error));
 		}
 	}
+
 
 	initSfx(){
 		this.sfx = {};
@@ -243,20 +248,43 @@ class Game{
 			const textureLoader = new THREE.TextureLoader();
 
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
-			// var course1 = textureLoader.load('a')
-			var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
+			var course2 = textureLoader.load('./assets/images/course2.jpg')
+			var course3 = textureLoader.load('./assets/images/course3.jpg')
 
-			var materials = [
+			var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
+			var blueMaterial = new THREE.MeshLambertMaterial({color:'#317cee', opacity: 0.8, transparent: true});
+			var orangeMaterial = new THREE.MeshLambertMaterial({color:'#d9850b', opacity: 0.8, transparent: true});
+
+			var materials1 = [
 				brownMaterial,
 				brownMaterial,
 				brownMaterial,
 				brownMaterial,
 				brownMaterial,
-				new THREE.MeshPhongMaterial({map:course1}),
+				new THREE.MeshPhongMaterial({map:course1})
+			]
+
+			var materials2 = [
+				blueMaterial,
+				blueMaterial,
+				blueMaterial,
+				blueMaterial,
+				blueMaterial,
+				new THREE.MeshPhongMaterial({map:course2})
+			]
+
+			var materials3 = [
+				orangeMaterial,
+				orangeMaterial,
+				orangeMaterial,
+				orangeMaterial,
+				orangeMaterial,
+				new THREE.MeshPhongMaterial({map:course3})
 			]
 
 			var box = new THREE.BoxGeometry(700,700,100);
-			var board1 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+
+			var board1 = new THREE.Mesh(box,new THREE.MeshFaceMaterial(materials1))
 			board1.position.set(6220,300,-373);
 			board1.name="board1"
 			game.scene.add(board1);
@@ -264,7 +292,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board2 = new THREE.Mesh(box ,new THREE.MeshFaceMaterial( materials))
+			var board2 = new THREE.Mesh(box ,new THREE.MeshFaceMaterial(materials2))
 			board2.position.set(8127,300,-1570);
 			board2.rotation.set(0,Math.PI/2,0)
 			board2.name="board2"
@@ -273,7 +301,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board3 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board3 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials3))
 			board3.position.set(8127,300,-4350);
 			board3.rotation.set(0,Math.PI/2,0)
 			board3.name="board3"
@@ -282,7 +310,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board4 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board4 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
 			board4.position.set(8127,300,-8061);
 			board4.rotation.set(0,Math.PI/2,0)
 			board4.name="board4"
@@ -291,7 +319,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board5 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board5 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
 			board5.position.set(1349,300,-482);
 			board5.name="board5"
 			game.scene.add(board5);
@@ -299,7 +327,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board6 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board6 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
 			board6.position.set(1349,300,-482);
 			board6.name="board6"
 			game.scene.add(board6);
@@ -307,7 +335,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board7 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board7 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
 			board7.position.set(-1655,300,-2740);
 			board7.rotation.set(0,-Math.PI/2,0)
 			board7.name="board7"
@@ -316,7 +344,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board8 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board8 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
 			board8.position.set(-1607,300,-4756);
 			board8.rotation.set(0,-Math.PI/2,0)
 			board8.name="board8"
@@ -325,7 +353,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board9 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board9 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
 			board9.position.set(-1597,300,-7492);
 			board9.rotation.set(0,-Math.PI/2,0)
 			board9.name="board9"
@@ -852,6 +880,71 @@ class PlayerLocal extends Player{
 				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board1")) > 1500) {
 					if(game.scene.getObjectByName("board1Append") !== null) {
 						game.scene.remove(game.scene.getObjectByName("board1Append"))
+					}
+				}
+
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board2")) < 1000) {
+
+					if(game.scene.getObjectByName("board2Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course2Append = textureLoader.load('./assets/images/course2Append.jpg')
+
+
+						var blueMaterial = new THREE.MeshLambertMaterial({ color: '#317cee', opacity: 0.8, transparent: true });
+
+						var materials2 = [
+							blueMaterial,
+							blueMaterial,
+							blueMaterial,
+							blueMaterial,
+							blueMaterial,
+							new THREE.MeshPhongMaterial({map:course2Append}),
+						]
+						//
+						var box2 = new THREE.BoxGeometry(300,300,1);
+						var board2Append = new THREE.Mesh(box2 ,new THREE.MeshFaceMaterial( materials2))
+						board2Append.position.set(8062,300,-979);
+						board2Append.rotation.set(0,Math.PI/2,0)
+						board2Append.name="board2Append"
+						game.scene.add(board2Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board2")) > 1500) {
+					if(game.scene.getObjectByName("board2Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board2Append"))
+					}
+				}
+
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board3")) < 1000) {
+
+					if(game.scene.getObjectByName("board3Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course3Append = textureLoader.load('./assets/images/course3Append.jpg')
+
+						var orangeMaterial = new THREE.MeshLambertMaterial({color:'#d9850b', opacity: 0.8, transparent: true});
+
+						var materials3 = [
+							orangeMaterial,
+							orangeMaterial,
+							orangeMaterial,
+							orangeMaterial,
+							orangeMaterial,
+							new THREE.MeshPhongMaterial({map:course3Append})
+						]
+						//
+						var box3 = new THREE.BoxGeometry(300,300,1);
+						var board3Append = new THREE.Mesh(box3 ,new THREE.MeshFaceMaterial( materials3))
+						board3Append.position.set(8167,300,-3676);
+						board3Append.rotation.set(0,Math.PI/2,0)
+						board3Append.name="board3Append"
+						game.scene.add(board3Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board3")) > 1500) {
+					if(game.scene.getObjectByName("board3Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board3Append"))
 					}
 				}
 			}
