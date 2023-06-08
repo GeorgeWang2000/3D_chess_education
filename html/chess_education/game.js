@@ -250,10 +250,14 @@ class Game{
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
 			var course2 = textureLoader.load('./assets/images/course2.jpg')
 			var course3 = textureLoader.load('./assets/images/course3.jpg')
+			var course4 = textureLoader.load('./assets/images/course4.jpg')
+
 
 			var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
 			var blueMaterial = new THREE.MeshLambertMaterial({color:'#317cee', opacity: 0.8, transparent: true});
 			var orangeMaterial = new THREE.MeshLambertMaterial({color:'#d9850b', opacity: 0.8, transparent: true});
+			var greenMaterial = new THREE.MeshLambertMaterial({color:'#0f7a10', opacity: 0.8, transparent: true});
+
 
 			var materials1 = [
 				brownMaterial,
@@ -280,6 +284,15 @@ class Game{
 				orangeMaterial,
 				orangeMaterial,
 				new THREE.MeshPhongMaterial({map:course3})
+			]
+
+			var materials4 = [
+				greenMaterial,
+				greenMaterial,
+				greenMaterial,
+				greenMaterial,
+				greenMaterial,
+				new THREE.MeshPhongMaterial({map:course4})
 			]
 
 			var box = new THREE.BoxGeometry(700,700,100);
@@ -310,7 +323,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board4 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
+			var board4 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials4))
 			board4.position.set(8127,300,-8061);
 			board4.rotation.set(0,Math.PI/2,0)
 			board4.name="board4"
@@ -945,6 +958,37 @@ class PlayerLocal extends Player{
 				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board3")) > 1500) {
 					if(game.scene.getObjectByName("board3Append") !== null) {
 						game.scene.remove(game.scene.getObjectByName("board3Append"))
+					}
+				}
+
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board4")) < 1000) {
+
+					if(game.scene.getObjectByName("board4Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course4Append = textureLoader.load('./assets/images/course4Append.jpg')
+						var greenMaterial = new THREE.MeshLambertMaterial({color:'#0f7a10', opacity: 0.8, transparent: true});
+
+						var materials4 = [
+							greenMaterial,
+							greenMaterial,
+							greenMaterial,
+							greenMaterial,
+							greenMaterial,
+							new THREE.MeshPhongMaterial({map:course4Append})
+						]
+						//
+						var box4 = new THREE.BoxGeometry(300,300,1);
+						var board4Append = new THREE.Mesh(box4 ,new THREE.MeshFaceMaterial( materials4))
+						board4Append.position.set(8067,300,-7351);
+						board4Append.rotation.set(0,Math.PI/2,0)
+						board4Append.name="board4Append"
+						game.scene.add(board4Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board4")) > 1500) {
+					if(game.scene.getObjectByName("board4Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board4Append"))
 					}
 				}
 			}
