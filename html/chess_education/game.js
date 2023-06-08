@@ -214,8 +214,8 @@ class Game{
 			} );
 			const gltfLoader = new THREE.GLTFLoader();
 			gltfLoader.load("./assets/gltf/scene.gltf",function(gltf){
-				gltf.scene.position.set(3620,-100,673);
-				gltf.scene.scale.set(80,80,80);
+				gltf.scene.position.set(3243,-100,-10151);
+				gltf.scene.scale.set(100,100,100);
 				gltf.scene.name="tower"
 				game.scene.add(gltf.scene);
 				gltf.scene.traverse( function ( child ) {
@@ -223,8 +223,8 @@ class Game{
 				})
 			})
 			gltfLoader.load("./assets/gltf/robert_the_kitchenware_robot.glb",function(gltf){
-				gltf.scene.position.set(3079,0,736);
-				gltf.scene.rotation.set(0,Math.PI,0)
+				gltf.scene.position.set(2389,0,-9831);
+				// gltf.scene.rotation.set(0,Math.PI,0)
 				gltf.scene.scale.set(200,200,200);
 				gltf.scene.name="robot"
 				game.scene.add(gltf.scene);
@@ -263,6 +263,24 @@ class Game{
 			board1.name="board1"
 			game.scene.add(board1);
 			board1.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board2 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board2.position.set(8127,300,-4350);
+			board2.rotation.set(0,Math.PI/2,0)
+			board2.name="board2"
+			game.scene.add(board2);
+			board2.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var board3 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board3.position.set(8127,300,-8061);
+			board3.rotation.set(0,Math.PI/2,0)
+			board3.name="board3"
+			game.scene.add(board3);
+			board3.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
 
