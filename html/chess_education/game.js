@@ -156,7 +156,7 @@ class Game{
 
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
-				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y)
+				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z)
 			}
 		})
 
@@ -214,8 +214,8 @@ class Game{
 			} );
 			const gltfLoader = new THREE.GLTFLoader();
 			gltfLoader.load("./assets/gltf/scene.gltf",function(gltf){
-				gltf.scene.position.set(3620,0,673);
-				gltf.scene.scale.set(30,30,30);
+				gltf.scene.position.set(3620,-100,673);
+				gltf.scene.scale.set(80,80,80);
 				gltf.scene.name="tower"
 				game.scene.add(gltf.scene);
 				gltf.scene.traverse( function ( child ) {
@@ -223,7 +223,8 @@ class Game{
 				})
 			})
 			gltfLoader.load("./assets/gltf/robert_the_kitchenware_robot.glb",function(gltf){
-				gltf.scene.position.set(3722,0,-973);
+				gltf.scene.position.set(3079,0,736);
+				gltf.scene.rotation.set(0,Math.PI,0)
 				gltf.scene.scale.set(200,200,200);
 				gltf.scene.name="robot"
 				game.scene.add(gltf.scene);
@@ -235,6 +236,7 @@ class Game{
 			const textureLoader = new THREE.TextureLoader();
 
 			var course0 = textureLoader.load('./assets/images/course0.jpg')
+			// var course1 = textureLoader.load('a')
 			var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
 
 			var materials = [
@@ -247,8 +249,17 @@ class Game{
 			]
 
 			var box = new THREE.BoxGeometry(700,700,100);
+			var board0 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			board0.position.set(6220,300,-373);
+			board0.name="board0"
+			game.scene.add(board0);
+			board0.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
 			var board1 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
-			board1.position.set(6220,300,-373);
+			board1.position.set(8127,300,-1570);
+			board1.rotation.set(0,Math.PI/2,0)
 			board1.name="board1"
 			game.scene.add(board1);
 			board1.traverse( function ( child ) {
