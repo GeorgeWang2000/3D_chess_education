@@ -257,7 +257,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board2 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials))
+			var board2 = new THREE.Mesh(box ,new THREE.MeshFaceMaterial( materials))
 			board2.position.set(8127,300,-1570);
 			board2.rotation.set(0,Math.PI/2,0)
 			board2.name="board2"
@@ -787,6 +787,13 @@ class PlayerLocal extends Player{
 		}
 	}
 
+	calculateDistance(obj1, obj2) {
+		var dx = obj1.position.x - obj2.position.x
+		var dy = obj1.position.y - obj2.position.y
+		var dz = obj1.position.z - obj2.position.z
+		return Math.sqrt(dx*dx + dy * dy + dz * dz)
+	}
+
 	move(dt){
 		const pos = this.object.position.clone();
 		pos.y += 60;
@@ -808,6 +815,37 @@ class PlayerLocal extends Player{
 					game.turn = 0;
 					game.forward = 0;
 					game.playerControl(0,0);
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board1")) < 1000) {
+					// alert("board1")
+					if(game.scene.getObjectByName("board1Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course1Append = textureLoader.load('./assets/images/course1Append.jpg')
+
+
+						var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
+
+						var materials = [
+							brownMaterial,
+							brownMaterial,
+							brownMaterial,
+							brownMaterial,
+							brownMaterial,
+							new THREE.MeshPhongMaterial({map:course1Append}),
+						]
+						//
+						var box = new THREE.BoxGeometry(300,300,1);
+						var board1Append = new THREE.Mesh(box ,new THREE.MeshFaceMaterial( materials))
+						board1Append.position.set(5621,300,-372);
+						board1Append.name="board1Append"
+						game.scene.add(board1Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board1")) > 1500) {
+					if(game.scene.getObjectByName("board1Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board1Append"))
+					}
 				}
 			}
 		}
