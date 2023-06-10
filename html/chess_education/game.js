@@ -217,7 +217,6 @@ class Game{
 	}
 
 	loadBoard () {
-		const game = this
 		var material=new THREE.LineBasicMaterial({color:'#000000',opacity:1, lineWidth:5});
 		for (var i=-5;i<=5;i++) {
 			var geometry1=new THREE.Geometry();
@@ -311,10 +310,11 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var towerOriginPoint = new THREE.Mesh(new THREE.SphereGeometry(5, 5, 5), transparent)
-			towerOriginPoint.position.set(1712,-9200,-5506);
-			towerOriginPoint.name = "towerOriginPoint"
-			game.scene.add(towerOriginPoint)
+			// var towerOriginPoint = new THREE.Mesh(new THREE.SphereGeometry(5, 5, 5), transparent)
+			// towerOriginPoint.position.set(1712,-9200,-5506);
+			// towerOriginPoint.name = "towerOriginPoint"
+			// towerOriginPoint.root = object
+			// game.scene.add(towerOriginPoint)
 
 
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
@@ -522,7 +522,8 @@ class Game{
 		collect.parent = this.player.object;
 
 		const tower = new THREE.Object3D();
-		tower.parent = game.scene.getObjectByName("towerOriginPoint")
+		tower.position.set(0,300,-1500)
+		tower.parent = this.scene.getObjectByName("towerBoard")
 
 
 		// var width = window.innerWidth; //窗口宽度
@@ -699,9 +700,9 @@ class Game{
 		if (this.cameras !== undefined && this.cameras.active !== undefined && this.player !== undefined && this.player.object !== undefined){
 			this.camera.position.lerp(this.cameras.active.getWorldPosition(new THREE.Vector3()), 0.05);
 			const pos = this.player.object.position.clone();
-			const pointPos = game.scene.getObjectByName("towerOriginPoint").position.clone();
-			pointPos.x += 700;
-			pointPos.y += 100;
+			const pointPos = game.scene.getObjectByName("towerBoard").position.clone();
+			// pointPos.x += 700;
+			// pointPos.y += 100;
 			// pointPos.z -= 500;
 			if (this.cameras.active === this.cameras.chat){
 				pos.y += 200;
