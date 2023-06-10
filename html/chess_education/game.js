@@ -216,8 +216,36 @@ class Game{
 		return canvas;
 	}
 
+	loadBoard () {
+		const game = this
+		var material=new THREE.LineBasicMaterial({color:'#000000',opacity:1, lineWidth:5});
+		for (var i=-5;i<=5;i++) {
+			var geometry1=new THREE.Geometry();
+			geometry1.vertices.push(new THREE.Vector3(75,75*i,-450));
+			geometry1.vertices.push(new THREE.Vector3(75,75*i,375));
+			var line1=new THREE.Line(geometry1,material);
+			line1.position.set(1944,-9000, -5483)
+			game.scene.add(line1);
+			var geometry2=new THREE.Geometry();
+			geometry2.vertices.push(new THREE.Vector3(75,-450,75*i));
+			geometry2.vertices.push(new THREE.Vector3(75,375,75*i));
+			var line2=new THREE.Line(geometry2,material);
+			line2.position.set(1944,-9000, -5483)
+			game.scene.add(line2);
+		}
+
+		var chessBoardMaterial = new THREE.MeshLambertMaterial({color:'#eca759', opacity: 0.8, transparent: true});
+		var towerBoardBox = new THREE.BoxGeometry(900,900,20)
+		var towerBoard = new THREE.Mesh(towerBoardBox, new THREE.MeshFaceMaterial(chessBoardMaterial))
+		towerBoard.position.set(2033,-9000,-5517);
+		towerBoard.rotation.set(0,Math.PI/2,0)
+		towerBoard.name="towerBoard"
+		game.scene.add(towerBoard);
+	}
+
 	loadEnvironment(loader){
 		const game = this;
+		this.loadBoard();
 		loader.load(`${this.assetsPath}fbx/town.fbx`, function(object){
 			game.environment = object;
 			game.colliders = [];
@@ -289,10 +317,6 @@ class Game{
 			game.scene.add(towerOriginPoint)
 
 
-
-
-
-
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
 			var course2 = textureLoader.load('./assets/images/course2.jpg')
 			var course3 = textureLoader.load('./assets/images/course3.jpg')
@@ -304,7 +328,6 @@ class Game{
 			var orangeMaterial = new THREE.MeshLambertMaterial({color:'#d9850b', opacity: 0.8, transparent: true});
 			var greenMaterial = new THREE.MeshLambertMaterial({color:'#0f7a10', opacity: 0.8, transparent: true});
 
-
 			var materials1 = [
 				brownMaterial,
 				brownMaterial,
@@ -314,13 +337,6 @@ class Game{
 				new THREE.MeshPhongMaterial({map:course1})
 			]
 
-			var towerBoard = new THREE.Mesh(box, new THREE.MeshFaceMaterial(materials1))
-			towerBoard.position.set(2093,-9500,-5567);
-			towerBoard.name="towerBoard"
-			game.scene.add(towerBoard);
-			towerBoard.traverse( function ( child ) {
-				game.colliders.push(child);
-			})
 
 			var materials2 = [
 				blueMaterial,
@@ -684,9 +700,9 @@ class Game{
 			this.camera.position.lerp(this.cameras.active.getWorldPosition(new THREE.Vector3()), 0.05);
 			const pos = this.player.object.position.clone();
 			const pointPos = game.scene.getObjectByName("towerOriginPoint").position.clone();
-			pointPos.x += 600;
+			pointPos.x += 700;
 			pointPos.y += 100;
-			pointPos.z -= 500;
+			// pointPos.z -= 500;
 			if (this.cameras.active === this.cameras.chat){
 				pos.y += 200;
 			}else{
