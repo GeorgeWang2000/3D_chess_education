@@ -30,6 +30,7 @@ class Game{
 		this.turn;
 		this.animations = {};
 		this.assetsPath = 'assets/';
+		this.blocked = false;
 
 		this.remotePlayers = [];
 		this.remoteColliders = [];
@@ -138,9 +139,11 @@ class Game{
 		const loader = new THREE.FBXLoader();
 		const game = this;
 
+		this.loadEnvironment(loader);
+
 		this.player = new PlayerLocal(this);
 
-		this.loadEnvironment(loader);
+
 
 		this.speechBubble = new SpeechBubble(this, "", 150);
 		this.speechBubble.mesh.position.set(0, 350, 0);
@@ -149,10 +152,10 @@ class Game{
 		this.turn = 0;
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
-				case KEY_W : this.forward = 1;break;
-				case KEY_A : this.turn = -1;break;
-				case KEY_S : this.forward = -1;break;
-				case KEY_D: this.turn = 1;break;
+				case KEY_W : if(!this.blocked) this.forward = 1;break;
+				case KEY_A : if(!this.blocked) this.turn = -1;break;
+				case KEY_S : if(!this.blocked) this.forward = -1;break;
+				case KEY_D : if(!this.blocked) this.turn = 1;break;
 			}
 			this.playerControl(this.forward, this.turn);
 		})
@@ -161,14 +164,20 @@ class Game{
 				case KEY_W : this.forward = 0;break;
 				case KEY_A : this.turn = 0;break;
 				case KEY_S : this.forward = 0;break;
-				case KEY_D: this.turn = 0;break;
+				case KEY_D : this.turn = 0;break;
 			}
 			this.playerControl(this.forward, this.turn);
 		})
 
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
-				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z)
+				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z);break;
+				case "Backspace" : {
+					// this.player.object.position.set(542, -9500, -3488)
+					this.activeCamera = this.cameras.tower;
+					this.blocked = true;
+					break;
+				}
 			}
 		})
 
@@ -247,6 +256,43 @@ class Game{
 
 			const textureLoader = new THREE.TextureLoader();
 
+			var box = new THREE.BoxGeometry(700,700,100);
+			var middleBox = new THREE.BoxGeometry(5000,5000,5000);
+
+			var text = textureLoader.load('./assets/images/course1.jpg')
+
+			var towerMaterial = new THREE.MeshBasicMaterial({
+				map: text,side: THREE.BackSide})
+
+			var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.BackSide });
+
+			var towerMaterials = [
+				towerMaterial, // 右侧面
+				transparent, // 左后侧面
+				transparent, // 上面
+				towerMaterial, // 下面
+				transparent, // 右后侧面
+				towerMaterial // 左侧面
+			]
+
+			var towerBox = new THREE.Mesh(middleBox, towerMaterials)
+			towerBox.position.set(2562,-7000,-5989);
+			towerBox.name="towerBox"
+			game.scene.add(towerBox);
+			towerBox.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
+
+			var towerOriginPoint = new THREE.Mesh(new THREE.SphereGeometry(5, 5, 5), transparent)
+			towerOriginPoint.position.set(1712,-9200,-5506);
+			towerOriginPoint.name = "towerOriginPoint"
+			game.scene.add(towerOriginPoint)
+
+
+
+
+
+
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
 			var course2 = textureLoader.load('./assets/images/course2.jpg')
 			var course3 = textureLoader.load('./assets/images/course3.jpg')
@@ -267,6 +313,14 @@ class Game{
 				brownMaterial,
 				new THREE.MeshPhongMaterial({map:course1})
 			]
+
+			var towerBoard = new THREE.Mesh(box, new THREE.MeshFaceMaterial(materials1))
+			towerBoard.position.set(2093,-9500,-5567);
+			towerBoard.name="towerBoard"
+			game.scene.add(towerBoard);
+			towerBoard.traverse( function ( child ) {
+				game.colliders.push(child);
+			})
 
 			var materials2 = [
 				blueMaterial,
@@ -295,7 +349,6 @@ class Game{
 				new THREE.MeshPhongMaterial({map:course4})
 			]
 
-			var box = new THREE.BoxGeometry(700,700,100);
 
 			var board1 = new THREE.Mesh(box,new THREE.MeshFaceMaterial(materials1))
 			board1.position.set(6220,300,-373);
@@ -451,7 +504,21 @@ class Game{
 		const collect = new THREE.Object3D();
 		collect.position.set(40, 82, 94);
 		collect.parent = this.player.object;
-		this.cameras = { front, back, wide, overhead, collect, chat };
+
+		const tower = new THREE.Object3D();
+		tower.parent = game.scene.getObjectByName("towerOriginPoint")
+
+
+		// var width = window.innerWidth; //窗口宽度
+		// var height = window.innerHeight; //窗口高度
+		// var k = width / height; //窗口宽高比
+		// var s = 200; //三维场景显示范围控制系数，系数越大，显示的范围越大
+		// //创建相机对象
+		// var towerCamera=new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+		// towerCamera.position.set(2562,-3000,-5989); //设置相机位置
+		// towerCamera.lookAt(new THREE.Vector3(0,0,0)); //设置相机方向(指向的场景对象)
+
+		this.cameras = { front, back, wide, overhead, collect, chat, tower};
 		this.activeCamera = this.cameras.back;
 	}
 
@@ -616,12 +683,19 @@ class Game{
 		if (this.cameras !== undefined && this.cameras.active !== undefined && this.player !== undefined && this.player.object !== undefined){
 			this.camera.position.lerp(this.cameras.active.getWorldPosition(new THREE.Vector3()), 0.05);
 			const pos = this.player.object.position.clone();
+			const pointPos = game.scene.getObjectByName("towerOriginPoint").position.clone();
+			pointPos.x += 600;
+			pointPos.y += 100;
+			pointPos.z -= 500;
 			if (this.cameras.active === this.cameras.chat){
 				pos.y += 200;
 			}else{
 				pos.y += 300;
 			}
-			this.camera.lookAt(pos);
+			if(this.cameras.active !== this.cameras.tower) this.camera.lookAt(pos);
+			else {
+				this.camera.lookAt(pointPos)
+			}
 		}
 
 		if (this.sun !== undefined){
