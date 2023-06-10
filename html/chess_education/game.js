@@ -3,8 +3,8 @@ const KEY_S = "KeyS";
 const KEY_A = "KeyA";
 const KEY_D = "KeyD";
 
-
-
+const stage1BlackList = ["40","31","32","33","34","20","23","10","12"]
+const stage1WhiteList = ["3-1","30","2-2","21","22","24","13","14","01","02"]
 
 class Game{
 	constructor(){
@@ -175,6 +175,7 @@ class Game{
 				case "Backspace" : {
 					// this.player.object.position.set(542, -9500, -3488)
 					this.activeCamera = this.cameras.tower;
+					this.generateStage(stage1BlackList, stage1WhiteList);
 					this.blocked = true;
 					break;
 				}
@@ -218,28 +219,78 @@ class Game{
 
 	loadBoard () {
 		var material=new THREE.LineBasicMaterial({color:'#000000',opacity:1, lineWidth:5});
+		var blackChessMaterial = new THREE.MeshLambertMaterial({ color: 'rgba(0,0,0,0.42)'});
+
+		var group = new THREE.Object3D();
 		for (var i=-5;i<=5;i++) {
 			var geometry1=new THREE.Geometry();
 			geometry1.vertices.push(new THREE.Vector3(75,75*i,-450));
 			geometry1.vertices.push(new THREE.Vector3(75,75*i,375));
 			var line1=new THREE.Line(geometry1,material);
-			line1.position.set(1944,-9000, -5483)
+			line1.position.set(1944,-8800, -5483)
 			game.scene.add(line1);
 			var geometry2=new THREE.Geometry();
 			geometry2.vertices.push(new THREE.Vector3(75,-450,75*i));
 			geometry2.vertices.push(new THREE.Vector3(75,375,75*i));
 			var line2=new THREE.Line(geometry2,material);
-			line2.position.set(1944,-9000, -5483)
+			line2.position.set(1944,-8800, -5483)
 			game.scene.add(line2);
 		}
 
-		var chessBoardMaterial = new THREE.MeshLambertMaterial({color:'#eca759', opacity: 0.8, transparent: true});
-		var towerBoardBox = new THREE.BoxGeometry(900,900,20)
+		var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.DoubleSide });
+
+		for (var i=-5;i<=5;i++) {
+			for(var j = -5;j<=5;j++) {
+				var sphere=new THREE.Mesh(new THREE.SphereGeometry(30,16,16),transparent);
+				sphere.position.set(75,75*i,75*j);
+				sphere.name = "sphere" + i + j
+				group.add(sphere)
+			}
+		}
+
+
+
+		group.position.set(1944,-8800, -5483)
+		group.name = "sphereGroup"
+		game.scene.add(group)
+
+		var chessBoardMaterial = new THREE.MeshLambertMaterial({color:'#eca759', opacity: 0.8});
+		var towerBoardBox = new THREE.BoxGeometry(925,925,20)
 		var towerBoard = new THREE.Mesh(towerBoardBox, new THREE.MeshFaceMaterial(chessBoardMaterial))
-		towerBoard.position.set(2033,-9000,-5517);
+		towerBoard.position.set(2033,-8800,-5517);
 		towerBoard.rotation.set(0,Math.PI/2,0)
 		towerBoard.name="towerBoard"
 		game.scene.add(towerBoard);
+	}
+
+
+	generateStage (blackList, whiteList) {
+		var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.DoubleSide });
+		for (var i=-5;i<=5;i++) {
+			for(var j = -5;j<=5;j++) {
+				game.scene.getObjectByName("sphereGroup").getObjectByName("sphere" + i + j).material = transparent
+			}
+		}
+
+
+		var blackChessMaterial = new THREE.MeshLambertMaterial({ color: 'rgba(0,0,0,0.42)'});
+		var whiteChessMaterial = new THREE.MeshLambertMaterial({ color: 'rgba(255,255,255,0)'});
+
+		//
+		for (var i = 0;i<blackList.length;i++) {
+			(function() {
+				var pos = blackList[i];
+				setInterval(function () {
+				game.scene.getObjectByName("sphereGroup").getObjectByName("sphere" + pos).material = blackChessMaterial
+			}, 1000 + i*250)})()
+		}
+		for (var i = 0;i<whiteList.length;i++) {
+			(function() {
+				var pos = whiteList[i];
+				setInterval(function () {
+					game.scene.getObjectByName("sphereGroup").getObjectByName("sphere" + pos).material = whiteChessMaterial
+				}, 900 + i*250)})()
+		}
 	}
 
 	loadEnvironment(loader){
@@ -291,7 +342,7 @@ class Game{
 			var towerMaterial = new THREE.MeshBasicMaterial({
 				map: text,side: THREE.BackSide})
 
-			var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.BackSide });
+			var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.DoubleSide });
 
 			var towerMaterials = [
 				towerMaterial, // 右侧面
