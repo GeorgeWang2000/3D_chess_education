@@ -315,42 +315,71 @@ class Game{
 	}
 
 	stageDispatch(stage) {
+
+		if(game.scene.getObjectByName("stageDirection") !== null) {
+			game.scene.remove(game.scene.getObjectByName("stageDirection"))
+		}
+
+		var text = ""
+
+
 		switch (stage) {
 			default:
 			case 1 : {
-				//TODO: 添加关卡的提示信息
 				this.generateStage(stage1BlackList, stage1WhiteList)
+				text = "第一关\n黑先，如何吃掉白棋？";
+
 				break;
 			}
 			case 2 : {
-				//TODO: 添加关卡的提示信息
 				this.generateStage(stage2BlackList, stage2WhiteList)
+				text = "第二关\n黑先，如何吃掉白棋？";
+
 				break;
 			}
 			case 3 : {
-				//TODO: 添加关卡的提示信息
 				this.generateStage(stage3BlackList, stage3WhiteList)
+				text = "第三关\n黑先，如何做活？";
+
 				break;
 			}
 			case 4 : {
-				//TODO: 添加关卡的提示信息
 				this.generateStage(stage4BlackList, stage4WhiteList)
+				text = "第四关\n黑先，如何杀掉白棋？";
 				break;
 			}
 
 			case 5 : {
-				//TODO: 添加关卡的提示信息
 				this.stage5Step1 = false
 				this.generateStage(stage5BlackList, stage5WhiteList)
+				text = "第五关\n黑先，如何做活？";
 				break;
 			}
 
 			case 6 : {
-				//TODO: 添加关卡的提示信息
 				this.generateStage(stage6BlackList, stage6WhiteList)
+				text = "第六关\n黑先，如何吃住白棋？";
 				break;
 			}
 		}
+
+		new THREE.FontLoader().load('./assets/font/DeYiHei.json', function(font) {
+			//加入立体文字
+			var t = new THREE.TextGeometry(text, {
+				// 设定文字字体
+				font: font,
+				//尺寸
+				size: 50,
+				//厚度
+				height: 5
+			});
+
+			var stageDirection = new THREE.Mesh(t, new THREE.MeshLambertMaterial({ color: "#000000"}))
+			stageDirection.position.set(1800,-9000,-6000)
+			stageDirection.rotation.set(0,-Math.PI/2,0)
+			stageDirection.name = "stageDirection";
+			game.scene.add(stageDirection);
+		})
 	}
 
 	generateStage (blackList, whiteList) {
@@ -467,6 +496,25 @@ class Game{
 			towerBox.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
+
+
+			// new THREE.FontLoader().load('./assets/font/DeYiHei.json', function(font) {
+			// 	//加入立体文字
+			// 	var text = new THREE.TextGeometry("", {
+			// 		// 设定文字字体
+			// 		font: font,
+			// 		//尺寸
+			// 		size: 50,
+			// 		//厚度
+			// 		height: 5
+			// 	});
+			//
+			// 	var stageDirection = new THREE.Mesh(text, new THREE.MeshLambertMaterial({ color: "#000000"}))
+			// 	stageDirection.position.set(1800,-9000,-6000)
+			// 	stageDirection.rotation.set(0,-Math.PI/2,0)
+			// 	stageDirection.name = "stageDirection";
+			// 	game.scene.add(stageDirection);
+			// })
 
 
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
