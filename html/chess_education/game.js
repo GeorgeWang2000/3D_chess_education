@@ -214,7 +214,7 @@ class Game{
 				case "KeyQ" : {
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
-					this.stage = -1;
+					this.stage = 1;
 					let pos=this.cameras.back.getWorldPosition(new THREE.Vector3())
 					this.camera.position.set(pos.x,pos.y,pos.z);
 					this.controls.enabled = false;
@@ -804,7 +804,11 @@ class Game{
 						game.stageDispatch(++game.stage)
 						game.faultTime = 0;
 					}, 1000)
-				} else if ( !stage2BlackList.includes(target[0].object.name.substring(6)) && !stage2WhiteList.includes(target[0].object.name.substring(6))) {
+				}
+				else if ( target[0].object.name === "sphere22") {
+					alert("这里是禁入点！不能下在这里！重新试一试吧！")
+				}
+				else if ( !stage2BlackList.includes(target[0].object.name.substring(6)) && !stage2WhiteList.includes(target[0].object.name.substring(6))) {
 					game.showSphere(target[0].object.name, "black");
 					setTimeout(function () {
 						game.showSphere("sphere3-1", "white")
@@ -861,6 +865,9 @@ class Game{
 						game.stageDispatch(++game.stage)
 						game.faultTime = 0;
 					}, 500)
+				}
+				else if(target[0].object.name === "sphere21" || target[0].object.name === "sphere01") {
+					alert("这里是禁入点！不能下在这里！重新试一试吧！")
 				}
 				else if ( !stage4BlackList.includes(target[0].object.name.substring(6)) && !stage4WhiteList.includes(target[0].object.name.substring(6))) {
 					game.showSphere(target[0].object.name, "black");
@@ -940,8 +947,66 @@ class Game{
 					}
 				}
 			}
+			// 第六关
+			else if( game.stage === 6) {
+				// 第一步下对
+				if ( target[0].object.name === "sphere00") {
+					game.showSphere("sphere00", "black")
+					setTimeout(function () {
+						alert("恭喜你！通过了所有的关卡！")
+						game.faultTime = 0;
+						game.activeCamera  =game.cameras.back;
+						game.blocked = false;
+						game.stage = 1;
+						let pos=game.cameras.back.getWorldPosition(new THREE.Vector3())
+						game.camera.position.set(pos.x,pos.y,pos.z);
+						game.controls.enabled = false;
+					}, 500)
+				}
+				else if ( target[0].object.name === "sphere01") {
+					game.showSphere("sphere01", "black")
+					setTimeout(function () {
+						game.showSphere("sphere10", "white")
+					}, 250)
+					game.faultTime++;
+					setTimeout(function () {
+						alert("下的不对哦！再试一试吧！")
+						if(game.faultTime === 3) {
+							alert("给点提示：回想一下学过的枷吃的内容吧！")
+						}
+						game.stageDispatch(game.stage)
+					}, 1000)
+				}
+				else if ( target[0].object.name === "sphere10") {
+					game.showSphere("sphere10", "black")
+					setTimeout(function () {
+						game.showSphere("sphere01", "white")
+					}, 250)
+					game.faultTime++;
+					setTimeout(function () {
+						alert("下的不对哦！再试一试吧！")
+						if(game.faultTime === 3) {
+							alert("给点提示：回想一下学过的枷吃的内容吧！")
+						}
+						game.stageDispatch(game.stage)
+					}, 1000)
+				}
+				else if(!stage6BlackList.includes(target[0].object.name.substring(6)) && !stage6WhiteList.includes(target[0].object.name.substring(6))) {
+					game.showSphere(target[0].object.name, "black");
+					setTimeout(function () {
+						game.showSphere("sphere00", "white")
+					}, 250)
+					game.faultTime++;
+					setTimeout(function () {
+						alert("下的不对哦！再试一试吧！")
+						if(game.faultTime === 3) {
+							alert("给点提示：回想一下学过的枷吃的内容吧！")
+						}
+						game.stageDispatch(game.stage)
+					}, 1000)
+				}
+			}
 		}
-
 		const intersects = raycaster.intersectObjects( this.remoteColliders );
 		const chat = document.getElementById('chat');
 
