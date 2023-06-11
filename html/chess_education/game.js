@@ -101,6 +101,17 @@ class Game{
 		return Math.sqrt(dx * dx + dy * dy + dz * dz)
 	}
 
+	initControls(){
+		this.controls=new THREE.OrbitControls( this.camera, this.renderer.domElement );
+		this.controls.target = this.scene.getObjectByName("towerBoard").position
+		this.controls.enableDamping = true;
+		this.controls.dampingFactor = 0.25;
+		this.controls.enableZoom = true;
+		this.controls.enableKeys = false;
+		this.controls.minDistance = 1000;
+		this.controls.maxDistance = 2000;
+	}
+
 	set activeCamera(object){
 		this.cameras.active = object;
 	}
@@ -177,6 +188,8 @@ class Game{
 					this.activeCamera = this.cameras.tower;
 					this.generateStage(stage1BlackList, stage1WhiteList);
 					this.blocked = true;
+					this.initControls();
+					this.camera.position.set(636,-8784,-5531);
 					break;
 				}
 			}
@@ -749,9 +762,11 @@ class Game{
 		if (this.player.motion !== undefined) this.player.move(dt);
 
 		if (this.cameras !== undefined && this.cameras.active !== undefined && this.player !== undefined && this.player.object !== undefined){
-			this.camera.position.lerp(this.cameras.active.getWorldPosition(new THREE.Vector3()), 0.05);
+			if (this.cameras.active !== this.cameras.tower){
+				this.camera.position.lerp(this.cameras.active.getWorldPosition(new THREE.Vector3()), 0.05);
+			}
 			const pos = this.player.object.position.clone();
-			const pointPos = game.scene.getObjectByName("towerBoard").position.clone();
+			const pointPos = game.scene.getObjectByName("towerBoard").position;
 			// pointPos.x += 700;
 			// pointPos.y += 100;
 			// pointPos.z -= 500;
@@ -763,6 +778,7 @@ class Game{
 			if(this.cameras.active !== this.cameras.tower) this.camera.lookAt(pos);
 			else {
 				this.camera.lookAt(pointPos)
+				this.controls.update(dt);
 			}
 		}
 
