@@ -6,6 +6,10 @@ const KEY_D = "KeyD";
 const stage1BlackList = ["40","31","32","33","34","20","23","10","12"]
 const stage1WhiteList = ["3-1","30","2-2","21","22","24","13","14","01","02"]
 
+const stage2BlackList = ["43", "42", "41", "4-2", "4-3", "34", "30", "3-4", "24", "20", "2-1", "2-3", "2-4", "14", "1-2", "1-3", "04", "0-1"]
+const stage2WhiteList = ["40", "4-1", "33", "32", "31", "3-2", "3-3", "23", "21", "2-2", "13", "12", "11", "10", "1-1"]
+
+
 class Game{
 	constructor(){
 		if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -32,6 +36,7 @@ class Game{
 		this.animations = {};
 		this.assetsPath = 'assets/';
 		this.blocked = false;
+		this.faultTime = 0;
 
 		this.remotePlayers = [];
 		this.remoteColliders = [];
@@ -699,12 +704,36 @@ class Game{
 		const target=raycaster.intersectObjects(this.colliders)
 		if(target.length>0){
 			if (target[0].object.parent.name === "KH_TowerHigh003"){
-				alert("start training!");
+				alert("请选择关卡：");
 			}
-			if(game.stage === 1 && target[0].object.name === "sphere11") {
-				game.showSphere("sphere11", "black")
-				game.hideSphere("sphere21")
-				game.hideSphere("sphere22")
+			if(game.stage === 1) {
+				if ( target[0].object.name === "sphere11") {
+					game.showSphere("sphere11", "black")
+					setTimeout(function () {
+						game.hideSphere("sphere21")
+						game.hideSphere("sphere22")
+					}, 250)
+					setTimeout(function () {
+						alert("恭喜你！答对啦！进入下一关")
+						game.generateStage(stage2BlackList, stage2WhiteList)
+					}, 1000)
+				} else if ( !stage1BlackList.includes(target[0].object.name.substring(6)) && !stage1WhiteList.includes(target[0].object.name.substring(6))) {
+					game.showSphere(target[0].object.name, "black");
+					setTimeout(function () {
+						game.showSphere("sphere11", "white")
+					}, 250)
+					setTimeout(function () {
+						game.hideSphere("sphere12")
+					}, 500)
+					game.faultTime++;
+					setTimeout(function () {
+						alert("下的不对哦！再试一试吧！")
+						game.generateStage(stage1BlackList, stage1WhiteList)
+						if(game.faultTime === 3) {
+							alert("给点提示：数数棋盘上棋子的气。有两颗白子现在只有一口气啦。")
+						}
+					}, 1000)
+				}
 			}
 		}
 
