@@ -198,7 +198,9 @@ class Game{
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
 					this.stage = -1;
-					delete this.controls
+					let pos=this.cameras.back.getWorldPosition(new THREE.Vector3())
+					this.camera.position.set(pos.x,pos.y,pos.z);
+					this.controls.enabled = false;
 					break;
 				}
 			}
