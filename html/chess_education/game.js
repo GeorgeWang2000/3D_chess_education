@@ -28,6 +28,7 @@ class Game{
 		this.renderer;
 		this.forward;
 		this.turn;
+		this.stage = -1;
 		this.animations = {};
 		this.assetsPath = 'assets/';
 		this.blocked = false;
@@ -188,8 +189,16 @@ class Game{
 					this.activeCamera = this.cameras.tower;
 					this.generateStage(stage1BlackList, stage1WhiteList);
 					this.blocked = true;
+					this.stage = 1;
 					this.initControls();
 					this.camera.position.set(636,-8784,-5531);
+					break;
+				}
+				case "KeyQ" : {
+					this.activeCamera  =this.cameras.back;
+					this.blocked = false;
+					this.stage = -1;
+					delete this.controls
 					break;
 				}
 			}
@@ -232,7 +241,6 @@ class Game{
 
 	loadBoard () {
 		var material=new THREE.LineBasicMaterial({color:'#000000',opacity:1, lineWidth:5});
-		var blackChessMaterial = new THREE.MeshLambertMaterial({ color: 'rgba(0,0,0,0.42)'});
 
 		var group = new THREE.Object3D();
 		for (var i=-5;i<=5;i++) {
@@ -257,6 +265,9 @@ class Game{
 				var sphere=new THREE.Mesh(new THREE.SphereGeometry(30,16,16),transparent);
 				sphere.position.set(75,75*i,75*j);
 				sphere.name = "sphere" + i + j
+				sphere.traverse( function ( child ) {
+					game.colliders.push(child);
+				})
 				group.add(sphere)
 			}
 		}
@@ -285,30 +296,48 @@ class Game{
 			}
 		}
 
-
-		var blackChessMaterial = new THREE.MeshLambertMaterial({ color: 'rgba(0,0,0,0.42)'});
-		var whiteChessMaterial = new THREE.MeshLambertMaterial({ color: 'rgba(255,255,255,0)'});
-
-		//
 		for (var i = 0;i<blackList.length;i++) {
 			(function() {
 				var pos = blackList[i];
-				setInterval(function () {
-				game.scene.getObjectByName("sphereGroup").getObjectByName("sphere" + pos).material = blackChessMaterial
-			}, 1000 + i*250)})()
+				setTimeout(function () {
+				game.showSphere("sphere" + pos, "black")
+			}, 500 + i*175)})()
 		}
 		for (var i = 0;i<whiteList.length;i++) {
 			(function() {
 				var pos = whiteList[i];
-				setInterval(function () {
-					game.scene.getObjectByName("sphereGroup").getObjectByName("sphere" + pos).material = whiteChessMaterial
-				}, 900 + i*250)})()
+				setTimeout(function () {
+					game.showSphere("sphere" + pos, "white")
+					if("sphere" + pos === "sphere21") {
+					}
+				}, 400 + i*175)
+			})()
 		}
+	}
+
+	showSphere(name, color) {
+		var blackChessMaterial = new THREE.MeshLambertMaterial({ color: "#000000"});
+		var whiteChessMaterial = new THREE.MeshLambertMaterial({ color: "#FFFFFF"});
+
+		if(color === "black") {
+			game.scene.getObjectByName("sphereGroup").getObjectByName(name ).material = blackChessMaterial
+		} else if(color === "white") {
+			game.scene.getObjectByName("sphereGroup").getObjectByName(name).material = whiteChessMaterial
+		}
+
+	}
+
+	hideSphere(name) {
+		game.scene.getObjectByName("sphereGroup").getObjectByName(name ).material = new THREE.MeshLambertMaterial({
+			opacity: 0,
+			transparent: true,
+			side: THREE.DoubleSide
+		})
 	}
 
 	loadEnvironment(loader){
 		const game = this;
-		this.loadBoard();
+
 		loader.load(`${this.assetsPath}fbx/town.fbx`, function(object){
 			game.environment = object;
 			game.colliders = [];
@@ -359,10 +388,10 @@ class Game{
 
 			var towerMaterials = [
 				towerMaterial, // 右侧面
-				transparent, // 左后侧面
-				transparent, // 上面
+				towerMaterial, // 左后侧面
+				towerMaterial, // 上面
 				towerMaterial, // 下面
-				transparent, // 右后侧面
+				towerMaterial, // 右后侧面
 				towerMaterial // 左侧面
 			]
 
@@ -373,12 +402,6 @@ class Game{
 			towerBox.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
-
-			// var towerOriginPoint = new THREE.Mesh(new THREE.SphereGeometry(5, 5, 5), transparent)
-			// towerOriginPoint.position.set(1712,-9200,-5506);
-			// towerOriginPoint.name = "towerOriginPoint"
-			// towerOriginPoint.root = object
-			// game.scene.add(towerOriginPoint)
 
 
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
@@ -474,7 +497,7 @@ class Game{
 			})
 
 			var board6 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
-			board6.position.set(1349,300,-482);
+			board6.position.set(-1655,300,-2740);
 			board6.name="board6"
 			game.scene.add(board6);
 			board6.traverse( function ( child ) {
@@ -482,7 +505,7 @@ class Game{
 			})
 
 			var board7 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
-			board7.position.set(-1655,300,-2740);
+			board7.position.set(-1607,300,-4756);
 			board7.rotation.set(0,-Math.PI/2,0)
 			board7.name="board7"
 			game.scene.add(board7);
@@ -491,20 +514,11 @@ class Game{
 			})
 
 			var board8 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
-			board8.position.set(-1607,300,-4756);
+			board8.position.set(-1597,300,-7492);
 			board8.rotation.set(0,-Math.PI/2,0)
 			board8.name="board8"
 			game.scene.add(board8);
 			board8.traverse( function ( child ) {
-				game.colliders.push(child);
-			})
-
-			var board9 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
-			board9.position.set(-1597,300,-7492);
-			board9.rotation.set(0,-Math.PI/2,0)
-			board9.name="board9"
-			game.scene.add(board9);
-			board9.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
 
@@ -517,6 +531,7 @@ class Game{
 				'pz.jpg', 'nz.jpg'
 			] );
 
+			game.loadBoard();
 			game.scene.background = textureCube;
 
 			game.loadNextAnim(loader);
@@ -589,15 +604,6 @@ class Game{
 		tower.position.set(0,300,-1500)
 		tower.parent = this.scene.getObjectByName("towerBoard")
 
-
-		// var width = window.innerWidth; //窗口宽度
-		// var height = window.innerHeight; //窗口高度
-		// var k = width / height; //窗口宽高比
-		// var s = 200; //三维场景显示范围控制系数，系数越大，显示的范围越大
-		// //创建相机对象
-		// var towerCamera=new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-		// towerCamera.position.set(2562,-3000,-5989); //设置相机位置
-		// towerCamera.lookAt(new THREE.Vector3(0,0,0)); //设置相机方向(指向的场景对象)
 
 		this.cameras = { front, back, wide, overhead, collect, chat, tower};
 		this.activeCamera = this.cameras.back;
@@ -692,6 +698,11 @@ class Game{
 		if(target.length>0){
 			if (target[0].object.parent.name === "KH_TowerHigh003"){
 				alert("start training!");
+			}
+			if(game.stage === 1 && target[0].object.name === "sphere11") {
+				game.showSphere("sphere11", "black")
+				game.hideSphere("sphere21")
+				game.hideSphere("sphere22")
 			}
 		}
 
@@ -1014,14 +1025,14 @@ class PlayerLocal extends Player{
 			const intersect = raycaster.intersectObjects([...colliders,...this.game.remoteColliders]);
 			if (intersect.length>0){
 				if (intersect[0].distance<50) blocked = true;
-				if (intersect[0].distance<500 && intersect[0].object.parent.name === "KH_TowerHigh003"){
-					alert("You found the tower!");
-					this.object.position.set(7788, -20, -4790);
-					this.object.rotation.set(3.14,-0.11,3.14);
-					game.turn = 0;
-					game.forward = 0;
-					game.playerControl(0,0);
-				}
+				// if (intersect[0].distance<500 && intersect[0].object.parent.name === "KH_TowerHigh003"){
+				// 	alert("You found the tower!");
+				// 	this.object.position.set(7788, -20, -4790);
+				// 	this.object.rotation.set(3.14,-0.11,3.14);
+				// 	game.turn = 0;
+				// 	game.forward = 0;
+				// 	game.playerControl(0,0);
+				// }
 				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board1")) < 1000) {
 					// alert("board1")
 					if(game.scene.getObjectByName("board1Append") == null) {
