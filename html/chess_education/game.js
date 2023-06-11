@@ -9,6 +9,17 @@ const stage1WhiteList = ["3-1","30","2-2","21","22","24","13","14","01","02"]
 const stage2BlackList = ["43", "42", "41", "4-2", "4-3", "34", "30", "3-4", "24", "20", "2-1", "2-3", "2-4", "14", "1-2", "1-3", "04", "0-1"]
 const stage2WhiteList = ["40", "4-1", "33", "32", "31", "3-2", "3-3", "23", "21", "2-2", "13", "12", "11", "10", "1-1"]
 
+const stage3BlackList = ["54", "53", "43", "34", "33"]
+const stage3WhiteList = ["52", "42", "32", "25", "24", "23", "22"]
+
+const stage4BlackList = ["43", "42", "41", "40", "4-1", "33", "3-1", "23", "2-1", "13", "1-1", "03", "0-1", "-13", "-12", "-1-1", "-22", "-21", "-20", "-2-1"]
+const stage4WhiteList = ["31", "30", "22", "20", "12", "11", "02", "00", "-11", "-10"]
+
+const stage5BlackList = ["54", "45", "44", "41", "34", "33", "32", "31"]
+const stage5WhiteList = ["51", "50", "43", "42", "40", "30", "25", "24", "23", "22", "21"]
+
+const stage6BlackList = ["32", "31", "23", "20", "13", "02"]
+const stage6WhiteList = ["22", "21", "12", "11", "-10"]
 
 class Game{
 	constructor(){
@@ -32,7 +43,8 @@ class Game{
 		this.renderer;
 		this.forward;
 		this.turn;
-		this.stage = -1;
+		this.stage = 1;
+		this.stage5Step1 = false;
 		this.animations = {};
 		this.assetsPath = 'assets/';
 		this.blocked = false;
@@ -192,9 +204,9 @@ class Game{
 				case "Backspace" : {
 					// this.player.object.position.set(542, -9500, -3488)
 					this.activeCamera = this.cameras.tower;
-					this.generateStage(stage1BlackList, stage1WhiteList);
+					this.stageDispatch(this.stage)
 					this.blocked = true;
-					this.stage = 1;
+					this.faultTime = 0;
 					this.initControls();
 					this.camera.position.set(636,-8784,-5531);
 					break;
@@ -294,6 +306,44 @@ class Game{
 		game.scene.add(towerBoard);
 	}
 
+	stageDispatch(stage) {
+		switch (stage) {
+			default:
+			case 1 : {
+				//TODO: 添加关卡的提示信息
+				this.generateStage(stage1BlackList, stage1WhiteList)
+				break;
+			}
+			case 2 : {
+				//TODO: 添加关卡的提示信息
+				this.generateStage(stage2BlackList, stage2WhiteList)
+				break;
+			}
+			case 3 : {
+				//TODO: 添加关卡的提示信息
+				this.generateStage(stage3BlackList, stage3WhiteList)
+				break;
+			}
+			case 4 : {
+				//TODO: 添加关卡的提示信息
+				this.generateStage(stage4BlackList, stage4WhiteList)
+				break;
+			}
+
+			case 5 : {
+				//TODO: 添加关卡的提示信息
+				this.stage5Step1 = false
+				this.generateStage(stage5BlackList, stage5WhiteList)
+				break;
+			}
+
+			case 6 : {
+				//TODO: 添加关卡的提示信息
+				this.generateStage(stage6BlackList, stage6WhiteList)
+				break;
+			}
+		}
+	}
 
 	generateStage (blackList, whiteList) {
 		var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.DoubleSide });
@@ -308,7 +358,7 @@ class Game{
 				var pos = blackList[i];
 				setTimeout(function () {
 				game.showSphere("sphere" + pos, "black")
-			}, 500 + i*175)})()
+			}, 500 + i*125)})()
 		}
 		for (var i = 0;i<whiteList.length;i++) {
 			(function() {
@@ -317,7 +367,7 @@ class Game{
 					game.showSphere("sphere" + pos, "white")
 					if("sphere" + pos === "sphere21") {
 					}
-				}, 400 + i*175)
+				}, 400 + i*125)
 			})()
 		}
 	}
@@ -706,6 +756,9 @@ class Game{
 			if (target[0].object.parent.name === "KH_TowerHigh003"){
 				alert("请选择关卡：");
 			}
+
+
+			// 第一关
 			if(game.stage === 1) {
 				if ( target[0].object.name === "sphere11") {
 					game.showSphere("sphere11", "black")
@@ -715,7 +768,8 @@ class Game{
 					}, 250)
 					setTimeout(function () {
 						alert("恭喜你！答对啦！进入下一关")
-						game.generateStage(stage2BlackList, stage2WhiteList)
+						game.stageDispatch(++game.stage)
+						game.faultTime = 0;
 					}, 1000)
 				} else if ( !stage1BlackList.includes(target[0].object.name.substring(6)) && !stage1WhiteList.includes(target[0].object.name.substring(6))) {
 					game.showSphere(target[0].object.name, "black");
@@ -728,11 +782,162 @@ class Game{
 					game.faultTime++;
 					setTimeout(function () {
 						alert("下的不对哦！再试一试吧！")
-						game.generateStage(stage1BlackList, stage1WhiteList)
 						if(game.faultTime === 3) {
 							alert("给点提示：数数棋盘上棋子的气。有两颗白子现在只有一口气啦。")
 						}
+						game.stageDispatch(game.stage)
 					}, 1000)
+				}
+			}
+
+			// 第二关
+			else if( game.stage === 2) {
+				if ( target[0].object.name === "sphere3-1") {
+					game.showSphere("sphere3-1", "black")
+					setTimeout(function () {
+						game.hideSphere("sphere3-2")
+						game.hideSphere("sphere3-3")
+						game.hideSphere("sphere2-2")
+					}, 250)
+					setTimeout(function () {
+						alert("恭喜你！答对啦！进入下一关")
+						game.stageDispatch(++game.stage)
+						game.faultTime = 0;
+					}, 1000)
+				} else if ( !stage2BlackList.includes(target[0].object.name.substring(6)) && !stage2WhiteList.includes(target[0].object.name.substring(6))) {
+					game.showSphere(target[0].object.name, "black");
+					setTimeout(function () {
+						game.showSphere("sphere3-1", "white")
+					}, 250)
+					setTimeout(function () {
+						game.hideSphere("sphere30")
+						game.hideSphere("sphere20")
+						game.hideSphere("sphere2-1")
+					}, 500)
+					game.faultTime++;
+					setTimeout(function () {
+						alert("下的不对哦！再试一试吧！")
+						if(game.faultTime === 3) {
+							alert("给点提示：不要被没有气吓到啦！只要能吃掉别人，看起来是禁入点的地方也可以下！")
+						}
+						game.stageDispatch(game.stage)
+					}, 1000)
+				}
+			}
+
+
+			// 第三关
+			else if( game.stage === 3) {
+				if ( target[0].object.name === "sphere45") {
+					game.showSphere("sphere45", "black")
+					setTimeout(function () {
+						alert("恭喜你！答对啦！进入下一关")
+						game.stageDispatch(++game.stage)
+						game.faultTime = 0;
+					}, 500)
+				}
+				else if ( !stage3BlackList.includes(target[0].object.name.substring(6)) && !stage3WhiteList.includes(target[0].object.name.substring(6))) {
+					game.showSphere(target[0].object.name, "black");
+					setTimeout(function () {
+						game.showSphere("sphere45", "white")
+					}, 250)
+					game.faultTime++;
+					setTimeout(function () {
+						alert("下的不对哦！再试一试吧！")
+						if(game.faultTime === 3) {
+							alert("给点提示：活棋的条件是两只真眼！找到黑棋可以做出两只真眼的位置吧！")
+						}
+						game.stageDispatch(game.stage)
+					}, 1000)
+				}
+			}
+
+			// 第四关
+			else if( game.stage === 4) {
+				if ( target[0].object.name === "sphere10") {
+					game.showSphere("sphere10", "black")
+					setTimeout(function () {
+						alert("恭喜你！答对啦！进入下一关")
+						game.stageDispatch(++game.stage)
+						game.faultTime = 0;
+					}, 500)
+				}
+				else if ( !stage4BlackList.includes(target[0].object.name.substring(6)) && !stage4WhiteList.includes(target[0].object.name.substring(6))) {
+					game.showSphere(target[0].object.name, "black");
+					setTimeout(function () {
+						game.showSphere("sphere10", "white")
+					}, 250)
+					game.faultTime++;
+					setTimeout(function () {
+						alert("下的不对哦！再试一试吧！")
+						if(game.faultTime === 3) {
+							alert("给点提示：要让白棋变成死棋，必须让它没有两只真眼！")
+						}
+						game.stageDispatch(game.stage)
+					}, 1000)
+				}
+			}
+
+			// 第五关
+			else if( game.stage === 5) {
+				// 下第一步
+				if(!game.stage5Step1) {
+					// 第一步下对
+					if ( target[0].object.name === "sphere52") {
+						game.showSphere("sphere52", "black")
+						setTimeout(function () {
+							game.showSphere("sphere53","white")
+							game.hideSphere("sphere52")
+						}, 250)
+						game.stage5Step1 = true;
+					}
+					// 第一步下错
+					else if(!stage5BlackList.includes(target[0].object.name.substring(6)) && !stage5WhiteList.includes(target[0].object.name.substring(6))) {
+						game.showSphere(target[0].object.name, "black");
+						setTimeout(function () {
+							game.showSphere("sphere52", "white")
+						}, 250)
+						game.faultTime++;
+						setTimeout(function () {
+							alert("下的不对哦！再试一试吧！")
+							if(game.faultTime === 3) {
+								alert("给点提示：回想一下学习过的倒扑的内容吧！")
+							}
+							game.stageDispatch(game.stage)
+						}, 1000)
+					}
+				}
+				// 下第二步
+				else {
+					// 第二步下对
+					if ( target[0].object.name === "sphere52") {
+						game.showSphere("sphere52", "black")
+						setTimeout(function () {
+							game.hideSphere("sphere53")
+							game.hideSphere("sphere43")
+							game.hideSphere("sphere42")
+						}, 250)
+						setTimeout(function () {
+							alert("恭喜你！答对啦！进入下一关")
+							game.stageDispatch(++game.stage)
+							game.faultTime = 0;
+						}, 500)
+					}
+					// 第二步下错
+					else if(!stage5BlackList.includes(target[0].object.name.substring(6)) && !stage5WhiteList.includes(target[0].object.name.substring(6)) && target[0].object.name !=="sphere53") {
+						game.showSphere(target[0].object.name, "black");
+						setTimeout(function () {
+							game.showSphere("sphere52", "white")
+						}, 250)
+						game.faultTime++;
+						setTimeout(function () {
+							alert("下的不对哦！再试一试吧！")
+							if(game.faultTime === 3) {
+								alert("给点提示：回想一下学习过的倒扑的内容吧！")
+							}
+							game.stageDispatch(game.stage)
+						}, 1000)
+					}
 				}
 			}
 		}
