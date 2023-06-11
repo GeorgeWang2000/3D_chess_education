@@ -3,6 +3,14 @@ const KEY_S = "KeyS";
 const KEY_A = "KeyA";
 const KEY_D = "KeyD";
 
+const robotSay = "欢迎来到围棋小镇！\n" +
+	"你可以在小镇内随意走动，或点击小镇中的人与他们对话\n。" +
+	"小镇中树立了许多的立牌，上面有一些围棋的基础知识\n。" +
+	"看到对面的塔了吗？当你完成学习后，靠近塔并点击它。里面有六道关卡在等着你。\n" +
+	"不要担心。你可以和同一个房间里的人交流。当你错误次数太多，我也会给你提示。\n" +
+	"如果你能顺利做对所有的题目，那你已经入门围棋啦！\n" +
+	"希望你在小镇中玩的愉快^^"
+
 const stage1BlackList = ["40","31","32","33","34","20","23","10","12"]
 const stage1WhiteList = ["3-1","30","2-2","21","22","24","13","14","01","02"]
 
@@ -465,12 +473,23 @@ class Game{
 			var course2 = textureLoader.load('./assets/images/course2.jpg')
 			var course3 = textureLoader.load('./assets/images/course3.jpg')
 			var course4 = textureLoader.load('./assets/images/course4.jpg')
+			var course5 = textureLoader.load('./assets/images/course5.jpg')
+			var course6 = textureLoader.load('./assets/images/course6.jpg')
+			var course7 = textureLoader.load('./assets/images/course7.jpg')
+			var course8 = textureLoader.load('./assets/images/course8.jpg')
+
+
 
 
 			var brownMaterial = new THREE.MeshLambertMaterial({ color: '#71462a', opacity: 0.8, transparent: true });
 			var blueMaterial = new THREE.MeshLambertMaterial({color:'#317cee', opacity: 0.8, transparent: true});
 			var orangeMaterial = new THREE.MeshLambertMaterial({color:'#d9850b', opacity: 0.8, transparent: true});
 			var greenMaterial = new THREE.MeshLambertMaterial({color:'#0f7a10', opacity: 0.8, transparent: true});
+			var lightGreenMaterial = new THREE.MeshLambertMaterial({color:'#98fb98', opacity: 0.8, transparent: true});
+			var brightOrangeMaterial = new THREE.MeshLambertMaterial({color:'#dc5712', opacity: 0.8, transparent: true});
+			var deepBlueMaterial = new THREE.MeshLambertMaterial({color:'#274862', opacity: 0.8, transparent: true});
+			var salmonMaterial = new THREE.MeshLambertMaterial({color:'#fa8072', opacity: 0.8, transparent: true});
+
 
 			var materials1 = [
 				brownMaterial,
@@ -509,6 +528,41 @@ class Game{
 				new THREE.MeshPhongMaterial({map:course4})
 			]
 
+			var materials5 = [
+				lightGreenMaterial,
+				lightGreenMaterial,
+				lightGreenMaterial,
+				lightGreenMaterial,
+				lightGreenMaterial,
+				new THREE.MeshPhongMaterial({map:course5})
+			]
+
+			var materials6 = [
+				brightOrangeMaterial,
+				brightOrangeMaterial,
+				brightOrangeMaterial,
+				brightOrangeMaterial,
+				brightOrangeMaterial,
+				new THREE.MeshPhongMaterial({map:course6})
+			]
+
+			var materials7 = [
+				deepBlueMaterial,
+				deepBlueMaterial,
+				deepBlueMaterial,
+				deepBlueMaterial,
+				deepBlueMaterial,
+				new THREE.MeshPhongMaterial({map:course7})
+			]
+
+			var materials8 = [
+				salmonMaterial,
+				salmonMaterial,
+				salmonMaterial,
+				salmonMaterial,
+				salmonMaterial,
+				new THREE.MeshPhongMaterial({map:course8})
+			]
 
 			var board1 = new THREE.Mesh(box,new THREE.MeshFaceMaterial(materials1))
 			board1.position.set(6220,300,-373);
@@ -545,7 +599,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board5 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
+			var board5 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials5))
 			board5.position.set(1349,300,-482);
 			board5.name="board5"
 			game.scene.add(board5);
@@ -553,15 +607,16 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board6 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
+			var board6 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials6))
 			board6.position.set(-1655,300,-2740);
+			board6.rotation.set(0,-Math.PI/2,0)
 			board6.name="board6"
 			game.scene.add(board6);
 			board6.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
 
-			var board7 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
+			var board7 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials7))
 			board7.position.set(-1607,300,-4756);
 			board7.rotation.set(0,-Math.PI/2,0)
 			board7.name="board7"
@@ -570,7 +625,7 @@ class Game{
 				game.colliders.push(child);
 			})
 
-			var board8 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials1))
+			var board8 = new THREE.Mesh(box,new THREE.MeshFaceMaterial( materials8))
 			board8.position.set(-1597,300,-7492);
 			board8.rotation.set(0,-Math.PI/2,0)
 			board8.name="board8"
@@ -753,8 +808,13 @@ class Game{
 
 		const target=raycaster.intersectObjects(this.colliders)
 		if(target.length>0){
+			console.log(target[0])
 			if (target[0].object.parent.name === "KH_TowerHigh003"){
 				alert("请选择关卡：");
+			}
+
+			if(target[0].object.parent.name === "areaLight7") {
+				alert("hello")
 			}
 
 
@@ -1459,6 +1519,129 @@ class PlayerLocal extends Player{
 				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board4")) > 1500) {
 					if(game.scene.getObjectByName("board4Append") !== null) {
 						game.scene.remove(game.scene.getObjectByName("board4Append"))
+					}
+				}
+
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board5")) < 1000) {
+
+					if(game.scene.getObjectByName("board5Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course5Append = textureLoader.load('./assets/images/course5Append.jpg')
+						var lightGreenMaterial = new THREE.MeshLambertMaterial({color:'#98fb98', opacity: 0.8, transparent: true});
+
+						var materials5 = [
+							lightGreenMaterial,
+							lightGreenMaterial,
+							lightGreenMaterial,
+							lightGreenMaterial,
+							lightGreenMaterial,
+							new THREE.MeshPhongMaterial({map:course5Append})
+						]
+						//
+						var box5 = new THREE.BoxGeometry(300,300,1);
+						var board5Append = new THREE.Mesh(box5 ,new THREE.MeshFaceMaterial( materials5))
+						board5Append.position.set(2015,300,-398);
+						board5Append.name="board5Append"
+						game.scene.add(board5Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board5")) > 1500) {
+					if(game.scene.getObjectByName("board5Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board5Append"))
+					}
+				}
+
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board6")) < 1000) {
+
+					if(game.scene.getObjectByName("board6Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course6Append = textureLoader.load('./assets/images/course6Append.jpg')
+						var brightOrangeMaterial = new THREE.MeshLambertMaterial({color:'#dc5712', opacity: 0.8, transparent: true});
+
+						var materials6 = [
+							brightOrangeMaterial,
+							brightOrangeMaterial,
+							brightOrangeMaterial,
+							brightOrangeMaterial,
+							brightOrangeMaterial,
+							new THREE.MeshPhongMaterial({map:course6Append})
+						]
+						//
+						var box6 = new THREE.BoxGeometry(300,300,1);
+						var board6Append = new THREE.Mesh(box6 ,new THREE.MeshFaceMaterial( materials6))
+						board6Append.position.set(-1579,300,-2086);
+						board6Append.rotation.set(0,-Math.PI/2,0)
+						board6Append.name="board6Append"
+						game.scene.add(board6Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board6")) > 1500) {
+					if(game.scene.getObjectByName("board6Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board6Append"))
+					}
+				}
+
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board7")) < 1000) {
+
+					if(game.scene.getObjectByName("board7Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course7Append = textureLoader.load('./assets/images/course7Append.jpg')
+						var deepBlueMaterial = new THREE.MeshLambertMaterial({color:'#274862', opacity: 0.8, transparent: true});
+
+						var materials7 = [
+							deepBlueMaterial,
+							deepBlueMaterial,
+							deepBlueMaterial,
+							deepBlueMaterial,
+							deepBlueMaterial,
+							new THREE.MeshPhongMaterial({map:course7Append})
+						]
+						//
+						var box7 = new THREE.BoxGeometry(300,300,1);
+						var board7Append = new THREE.Mesh(box7 ,new THREE.MeshFaceMaterial( materials7))
+						board7Append.position.set(-1664,300,-4113);
+						board7Append.rotation.set(0,-Math.PI/2,0)
+						board7Append.name="board7Append"
+						game.scene.add(board7Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board7")) > 1500) {
+					if(game.scene.getObjectByName("board7Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board7Append"))
+					}
+				}
+
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board8")) < 1000) {
+
+					if(game.scene.getObjectByName("board8Append") == null) {
+
+						const textureLoader = new THREE.TextureLoader();
+						var course8Append = textureLoader.load('./assets/images/course8Append.jpg')
+						var salmonMaterial = new THREE.MeshLambertMaterial({color:'#fa8072', opacity: 0.8, transparent: true});
+
+						var materials8 = [
+							salmonMaterial,
+							salmonMaterial,
+							salmonMaterial,
+							salmonMaterial,
+							salmonMaterial,
+							new THREE.MeshPhongMaterial({map:course8Append})
+						]
+						//
+						var box8 = new THREE.BoxGeometry(300,300,1);
+						var board8Append = new THREE.Mesh(box8 ,new THREE.MeshFaceMaterial( materials8))
+						board8Append.position.set(-1596,300,-6863);
+						board8Append.rotation.set(0,-Math.PI/2,0)
+						board8Append.name="board8Append"
+						game.scene.add(board8Append);
+					}
+				}
+				if(this.calculateDistance(game.player.object, game.scene.getObjectByName("board8")) > 1500) {
+					if(game.scene.getObjectByName("board8Append") !== null) {
+						game.scene.remove(game.scene.getObjectByName("board8Append"))
 					}
 				}
 			}
