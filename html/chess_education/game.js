@@ -31,6 +31,16 @@ const stage5WhiteList = ["51", "50", "43", "42", "40", "30", "25", "24", "23", "
 const stage6BlackList = ["32", "31", "23", "20", "13", "02"]
 const stage6WhiteList = ["22", "21", "12", "11", "-10"]
 
+const rainbow = [
+	"#FF0000",
+	"#FF7F00",
+	"#FFFF00",
+	"#00FF00",
+	"#0000FF",
+	"#4B0082",
+	"#800080"
+]
+
 class Game{
 	constructor(){
 		if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -469,6 +479,35 @@ class Game{
 				})
 			})
 
+			new THREE.FontLoader().load('./assets/font/DeYiHei.json', function(font) {
+				//加入立体文字
+				var t = new THREE.TextGeometry("点我↓", {
+					// 设定文字字体
+					font: font,
+					//尺寸
+					size: 50,
+					//厚度
+					height: 5
+				});
+
+
+				var clickMe = new THREE.Mesh(t, new THREE.MeshLambertMaterial({color: "#ff0000"}))
+				clickMe.position.set(3356, 300, -2061)
+				// clickMe.material.color.set("#000000")
+				var currentColor = 0;
+				setInterval(() => {
+					clickMe.material.color.set(rainbow[currentColor])
+					currentColor++;
+					if (currentColor === rainbow.length) {
+						currentColor = 0;
+					}
+				}, 500);
+
+
+				// clickMe.rotation.set(0,-Math.PI/2,0)
+				clickMe.name = "clickMe";
+				game.scene.add(clickMe);
+			})
 			const textureLoader = new THREE.TextureLoader();
 
 			var box = new THREE.BoxGeometry(700,700,100);
@@ -477,7 +516,6 @@ class Game{
 			var chessFloor = textureLoader.load('./assets/images/chessFloor.jpg')
 			var negx = textureLoader.load('./assets/images/negx.jpg')
 			var negy = textureLoader.load('./assets/images/negy.jpg')
-			var negz = textureLoader.load('./assets/images/negz.jpg')
 			var posx = textureLoader.load('./assets/images/posx.jpg')
 			var posy = textureLoader.load('./assets/images/posy.jpg')
 			var posz = textureLoader.load('./assets/images/posz.jpg')
@@ -513,6 +551,10 @@ class Game{
 			towerBox.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
+
+
+
+
 
 
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
