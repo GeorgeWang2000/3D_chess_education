@@ -496,28 +496,15 @@ class Game{
 				map: negx,side: THREE.BackSide})
 			var negyMaterial = new THREE.MeshBasicMaterial({
 				map: negy,side: THREE.BackSide})
-			var negzMaterial = new THREE.MeshBasicMaterial({
-				map: negz,side: THREE.BackSide})
-
-			var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.DoubleSide });
 
 			var towerMaterials = [
-				posxMaterial, negxMaterial,
-				posyMaterial, negyMaterial,
-				poszMaterial, negzMaterial
+				negyMaterial, // 右侧面
+				posyMaterial, // 左后侧面
+				poszMaterial, // 上面
+				chessFloorMaterial, // 下面
+				negxMaterial, // 右后侧面
+				posxMaterial // 左侧面
 			]
-
-
-
-
-			// var towerMaterials = [
-			// 	chess4Material, // 右侧面
-			// 	chess2Material, // 左后侧面
-			// 	chessRoofMaterial, // 上面
-			// 	chessFloorMaterial, // 下面
-			// 	chess3Material, // 右后侧面
-			// 	chess1Material // 左侧面
-			// ]
 
 			var towerBox = new THREE.Mesh(middleBox, towerMaterials)
 			towerBox.position.set(2562,-7000,-5989);
