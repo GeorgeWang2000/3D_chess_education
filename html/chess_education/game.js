@@ -4,10 +4,12 @@ const KEY_A = "KeyA";
 const KEY_D = "KeyD";
 
 const robotSay = "欢迎来到围棋小镇！\n" +
-	"你可以在小镇内随意走动，或点击小镇中的人与他们对话\n。" +
-	"小镇中树立了许多的立牌，上面有一些围棋的基础知识\n。" +
+	"你可以在小镇内随意走动，或点击小镇中别的玩家与他们对话。\n" +
+	"你可以按r离开围棋小镇。\n"+
+	"小镇中有8块立牌，上面有一些围棋的基础知识供你学习。\n" +
 	"看到对面的塔了吗？当你完成学习后，靠近塔并点击它。里面有六道关卡在等着你。\n" +
-	"不要担心。你可以和同一个房间里的人交流。当你错误次数太多，我也会给你提示。\n" +
+	"不用担心，你可以和跟你在同一个关卡里的人交流。当你错误次数太多，我也会给你提示。\n" +
+	"你也可以随时按q键回到广场继续学习。\n"+
 	"如果你能顺利做对所有的题目，那你已经入门围棋啦！\n" +
 	"希望你在小镇中玩的愉快^^"
 
@@ -210,7 +212,6 @@ class Game{
 			switch (ev.code) {
 				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z);break;
 				case "Backspace" : {
-					// this.player.object.position.set(542, -9500, -3488)
 					this.activeCamera = this.cameras.tower;
 					this.stageDispatch(this.stage)
 					this.blocked = true;
@@ -374,7 +375,7 @@ class Game{
 				height: 5
 			});
 
-			var stageDirection = new THREE.Mesh(t, new THREE.MeshLambertMaterial({ color: "#000000"}))
+			var stageDirection = new THREE.Mesh(t, new THREE.MeshLambertMaterial({ color: "#ffffff"}))
 			stageDirection.position.set(1800,-9000,-6000)
 			stageDirection.rotation.set(0,-Math.PI/2,0)
 			stageDirection.name = "stageDirection";
@@ -473,21 +474,50 @@ class Game{
 			var box = new THREE.BoxGeometry(700,700,100);
 			var middleBox = new THREE.BoxGeometry(5000,5000,5000);
 
-			var text = textureLoader.load('./assets/images/course1.jpg')
+			var chessFloor = textureLoader.load('./assets/images/chessFloor.jpg')
+			var negx = textureLoader.load('./assets/images/negx.jpg')
+			var negy = textureLoader.load('./assets/images/negy.jpg')
+			var negz = textureLoader.load('./assets/images/negz.jpg')
+			var posx = textureLoader.load('./assets/images/posx.jpg')
+			var posy = textureLoader.load('./assets/images/posy.jpg')
+			var posz = textureLoader.load('./assets/images/posz.jpg')
 
-			var towerMaterial = new THREE.MeshBasicMaterial({
-				map: text,side: THREE.BackSide})
+
+
+			var chessFloorMaterial = new THREE.MeshBasicMaterial({
+				map: chessFloor,side: THREE.BackSide})
+			var posxMaterial = new THREE.MeshBasicMaterial({
+				map: posx,side: THREE.BackSide})
+			var posyMaterial = new THREE.MeshBasicMaterial({
+				map: posy,side: THREE.BackSide})
+			var poszMaterial = new THREE.MeshBasicMaterial({
+				map: posz,side: THREE.BackSide})
+			var negxMaterial = new THREE.MeshBasicMaterial({
+				map: negx,side: THREE.BackSide})
+			var negyMaterial = new THREE.MeshBasicMaterial({
+				map: negy,side: THREE.BackSide})
+			var negzMaterial = new THREE.MeshBasicMaterial({
+				map: negz,side: THREE.BackSide})
 
 			var transparent = new THREE.MeshLambertMaterial({opacity: 0, transparent: true, side: THREE.DoubleSide });
 
 			var towerMaterials = [
-				towerMaterial, // 右侧面
-				towerMaterial, // 左后侧面
-				towerMaterial, // 上面
-				towerMaterial, // 下面
-				towerMaterial, // 右后侧面
-				towerMaterial // 左侧面
+				posxMaterial, negxMaterial,
+				posyMaterial, negyMaterial,
+				poszMaterial, negzMaterial
 			]
+
+
+
+
+			// var towerMaterials = [
+			// 	chess4Material, // 右侧面
+			// 	chess2Material, // 左后侧面
+			// 	chessRoofMaterial, // 上面
+			// 	chessFloorMaterial, // 下面
+			// 	chess3Material, // 右后侧面
+			// 	chess1Material // 左侧面
+			// ]
 
 			var towerBox = new THREE.Mesh(middleBox, towerMaterials)
 			towerBox.position.set(2562,-7000,-5989);
@@ -496,25 +526,6 @@ class Game{
 			towerBox.traverse( function ( child ) {
 				game.colliders.push(child);
 			})
-
-
-			// new THREE.FontLoader().load('./assets/font/DeYiHei.json', function(font) {
-			// 	//加入立体文字
-			// 	var text = new THREE.TextGeometry("", {
-			// 		// 设定文字字体
-			// 		font: font,
-			// 		//尺寸
-			// 		size: 50,
-			// 		//厚度
-			// 		height: 5
-			// 	});
-			//
-			// 	var stageDirection = new THREE.Mesh(text, new THREE.MeshLambertMaterial({ color: "#000000"}))
-			// 	stageDirection.position.set(1800,-9000,-6000)
-			// 	stageDirection.rotation.set(0,-Math.PI/2,0)
-			// 	stageDirection.name = "stageDirection";
-			// 	game.scene.add(stageDirection);
-			// })
 
 
 			var course1 = textureLoader.load('./assets/images/course1.jpg')
@@ -858,11 +869,34 @@ class Game{
 		if(target.length>0){
 			console.log(target[0])
 			if (target[0].object.parent.name === "KH_TowerHigh003"){
+				this.forward = 0;
+				this.turn = 0;
+				this.playerControl(0,0)
 				alert("请选择关卡：");
+				this.stage = 1;
+				this.activeCamera = this.cameras.tower;
+				this.stageDispatch(this.stage)
+				this.blocked = true;
+				this.faultTime = 0;
+				this.initControls();
+				this.camera.position.set(636,-8784,-5531);
 			}
 
 			if(target[0].object.parent.name === "areaLight7") {
-				alert("hello")
+				$('#robotSay').empty()
+				$('#robot').css({display:'block'})
+				for(let i = 0; i<robotSay.length;i++) {
+					setTimeout( function () {
+						if(robotSay.charAt(i) === '\n') {
+							$('#robotSay').append("<br>")
+						} else {
+							$('#robotSay').append(robotSay.charAt(i))
+						}
+					},i*50)
+				}
+				setTimeout(function() {
+					$('#robot').append("<div><button id=\"closeButton\" onclick=\"closeRobot()\">关闭</button>")
+				},11000)
 			}
 
 
@@ -1861,4 +1895,11 @@ class SpeechBubble{
 			this.mesh.lookAt(pos);
 		}
 	}
+}
+
+
+function closeRobot() {
+	$('#robot').css({display:'none'})
+	$('#robotSay').empty()
+	$('#closeButton').remove()
 }

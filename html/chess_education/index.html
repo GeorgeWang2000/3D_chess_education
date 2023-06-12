@@ -62,6 +62,43 @@
 				bottom: -40px;
 				transition: all 0.5s;
 			}
+			#robot {
+				position:absolute;
+				left: 50%;
+				top: 50%;
+				transform: translateX(-50%) translateY(-50%);
+				font-family: 'Kavivanar', san-serif;
+				font-size: 40px;
+				width:80%;
+				/*max-width:280px;*/
+				padding: 15px 15px 50px 15px;
+				text-align: center;
+				display:none;
+				align-content: center;
+				justify-content: center;
+				background-color: aliceblue;
+				border: medium solid #3D455C;
+				border-radius: 20px;
+				color: #3D455C;
+				z-index: 99;
+			}
+			#closeButton {
+				width: 20%;
+				border: none;
+				outline: none;
+				height: 35px;
+				border-radius: 49px;
+				color: #fff;
+				background-color: #C9822C ;
+				text-transform: uppercase;
+				font-weight: 400;
+				margin: 10px 0;
+				cursor: pointer;
+				transition: 0.5s;
+			}
+			#closeButton:hover {
+				background-color: #EBB36B;
+			}
 			form { background: #000; padding: 3px; width: 100%; }
       		form input { border: 0; padding: 10px; width: 88%; margin-right: .5%; }
       		form button { width: 8%; background: rgb(130, 224, 255); border: none; padding: 10px; }
@@ -78,10 +115,13 @@
       			<input id="m" autocomplete="off" /><button>Send</button>
     		</form>
 		</div>
+		<div id="robot">
+			<div id="robotSay"></div>
+		</div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
 		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
-		
+
 		<script src= "libs/inflate.min.js"></script>
 		<script src="libs/FBXLoader.js"></script>
 		<script src="libs/GLTFLoader.js"></script>
