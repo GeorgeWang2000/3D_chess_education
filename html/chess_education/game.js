@@ -240,7 +240,7 @@ class Game{
 					$("#roomForm").css({display: "flex"})
 					break;
 				}
-				case "Esc" : {
+				case "Escape" : {
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
 					this.stage = 1;
@@ -252,7 +252,7 @@ class Game{
 					break;
 				}
 				case "Tab" : {
-					window.location.href = "localhost:80/profile"
+					window.location.href = "//localhost:80/profile"
 				}
 			}
 		})
