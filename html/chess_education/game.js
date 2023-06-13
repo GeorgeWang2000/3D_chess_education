@@ -71,6 +71,7 @@ class Game{
 		this.assetsPath = 'assets/';
 		this.blocked = false;
 		this.faultTime = 0;
+		this.role = 1;
 
 		this.remotePlayers = [];
 		this.remoteColliders = [];
@@ -1300,8 +1301,13 @@ class Player{
 		colour = colours[Math.floor(Math.random()*colours.length)];
 
 		if (options===undefined){
-			const people = ['BeachBabe', 'BusinessMan', 'Doctor', 'FireFighter', 'Housewife', 'Policeman', 'Prostitute', 'Punk', 'RiotCop', 'Roadworker', 'Robber', 'Sheriff', 'Streetman', 'Waitress'];
-			model = people[Math.floor(Math.random()*people.length)];
+			const people = ['BeachBabe', 'BusinessMan', 'Doctor', 'FireFighter', 'Housewife', 'Policeman', 'Prostitute', 'Punk', 'RiotCop', 'Roadworker'];
+			if(game.role < 0 || game.role > 9) {
+				model = people[Math.floor(Math.random()*people.length)];
+			}
+			else {
+				model = people[game.role]
+			}
 		}else if (typeof options =='object'){
 			this.local = false;
 			this.options = options;

@@ -189,7 +189,15 @@
 		<script src="game.js"></script>
 		<script>
 			var game;
-			document.addEventListener("DOMContentLoaded", function(){ game = new Game(); });
+			document.addEventListener("DOMContentLoaded", function(){
+				//  var url = window.location.href
+				var url = "localhost:2002?email=1044631054&cloth=2"
+				var username = url.split("email=")[1].split("&cloth=")[0]
+				var role = parseInt(url.split("cloth=")[1].charAt(0))
+				game = new Game();
+				game.username = username
+				game.role = role
+				});
 		</script>
 	</body>
 </html>
