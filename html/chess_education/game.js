@@ -221,15 +221,17 @@ class Game{
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
 				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z);break;
-				case "Backspace" : {
-					this.activeCamera = this.cameras.tower;
-					this.stageDispatch(this.stage)
-					this.blocked = true;
-					this.faultTime = 0;
-					this.initControls();
-					this.camera.position.set(636,-8784,-5531);
-					break;
-				}
+				// case "Backspace" : {
+				// 	this.activeCamera = this.cameras.tower;
+				// 	this.stageDispatch(this.stage)
+				// 	this.blocked = true;
+				// 	this.faultTime = 0;
+				// 	this.initControls();
+				// 	this.camera.position.set(636,-8784,-5531);
+				// 	$("#roomChatContent").css({display:"block"})
+				// 	$("#roomForm").css({display: "flex"})
+				// 	break;
+				// }
 				case "KeyQ" : {
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
@@ -237,6 +239,8 @@ class Game{
 					let pos=this.cameras.back.getWorldPosition(new THREE.Vector3())
 					this.camera.position.set(pos.x,pos.y,pos.z);
 					this.controls.enabled = false;
+					$("#roomChatContent").css({display:"none"})
+					$("#roomForm").css({display: "none"})
 					break;
 				}
 			}
@@ -902,6 +906,7 @@ class Game{
 				this.turn = 0;
 				this.playerControl(0,0)
 				alert("请选择关卡：");
+				// TODO：从后端读取可以游玩的关卡数
 				this.stage = 1;
 				this.activeCamera = this.cameras.tower;
 				this.stageDispatch(this.stage)
@@ -909,6 +914,8 @@ class Game{
 				this.faultTime = 0;
 				this.initControls();
 				this.camera.position.set(636,-8784,-5531);
+				$("#roomChatContent").css({display:"block"})
+				$("#roomForm").css({display: "flex"})
 			}
 
 			if(target[0].object.parent.name === "areaLight7") {
@@ -1125,6 +1132,8 @@ class Game{
 					game.showSphere("sphere00", "black")
 					setTimeout(function () {
 						alert("恭喜你！通过了所有的关卡！")
+						$("#roomChatContent").css({display:"none"})
+						$("#roomForm").css({display: "none"})
 						game.faultTime = 0;
 						game.activeCamera  =game.cameras.back;
 						game.blocked = false;
@@ -1931,4 +1940,10 @@ function closeRobot() {
 	$('#robot').css({display:'none'})
 	$('#robotSay').empty()
 	$('#closeButton').remove()
+}
+
+function sendRoomChat() {
+	if(document.getElementById("roomInput").value === "" ) return;
+	// TODO: emit()
+	// alert(document.getElementById("roomInput").value)
 }

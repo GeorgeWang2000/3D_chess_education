@@ -99,6 +99,58 @@
 			#closeButton:hover {
 				background-color: #EBB36B;
 			}
+
+			#roomChatContent {
+				position:absolute;
+				bottom: 150px;
+				max-height: 250px;
+				display: none;
+				font-family: 'Kavivanar', san-serif;
+				font-size: 15px;
+				width:100%;
+				max-width:280px;
+				padding: 15px 15px 50px 15px;
+				text-align: left;
+				overflow: auto;
+				background-color: aliceblue;
+				opacity: 0.8;
+				border: medium solid #3D455C;
+				border-radius: 20px;
+				color: #3D455C;
+				z-index: 99;
+			}
+			#roomForm {
+				position: absolute;
+				bottom: 100px;
+				/*display: flex;*/
+				opacity: 0.8;
+				display: none;
+			}
+			#roomInput {
+				padding: 10px;
+				width: 180px;
+				margin-left: 10px;
+				border: black 1px solid;
+				border-radius: 35px;
+			}
+			#roomSend {
+				width: 80px;
+				display: inline;
+				border: none;
+				outline: none;
+				height: 35px;
+				border-radius: 49px;
+				color: #fff;
+				background-color: #C9822C ;
+				text-transform: uppercase;
+				font-weight: 400;
+				cursor: pointer;
+				transition: 0.5s;
+				margin-left: 10px;
+			}
+			#roomSend:hover {
+				background-color: #EBB36B;
+			}
 			form { background: #000; padding: 3px; width: 100%; }
       		form input { border: 0; padding: 10px; width: 88%; margin-right: .5%; }
       		form button { width: 8%; background: rgb(130, 224, 255); border: none; padding: 10px; }
@@ -117,6 +169,12 @@
 		</div>
 		<div id="robot">
 			<div id="robotSay"></div>
+		</div>
+		<div id="roomChatContent">
+
+		</div>
+		<div id="roomForm">
+			<input id="roomInput" /><button id="roomSend" onclick="sendRoomChat()">Send</button>
 		</div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
 		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
