@@ -41,6 +41,8 @@ const rainbow = [
 	"#800080"
 ]
 
+
+
 class Game{
 	constructor(){
 		if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -54,7 +56,7 @@ class Game{
 			GAMEOVER: Symbol("gameover")
 		});
 		this.mode = this.modes.NONE;
-
+		this.username = "userExample";
 		this.container;
 		this.player;
 		this.cameras;
@@ -221,17 +223,17 @@ class Game{
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
 				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z);break;
-				// case "Backspace" : {
-				// 	this.activeCamera = this.cameras.tower;
-				// 	this.stageDispatch(this.stage)
-				// 	this.blocked = true;
-				// 	this.faultTime = 0;
-				// 	this.initControls();
-				// 	this.camera.position.set(636,-8784,-5531);
-				// 	$("#roomChatContent").css({display:"block"})
-				// 	$("#roomForm").css({display: "flex"})
-				// 	break;
-				// }
+				case "Backspace" : {
+					this.activeCamera = this.cameras.tower;
+					this.stageDispatch(this.stage)
+					this.blocked = true;
+					this.faultTime = 0;
+					this.initControls();
+					this.camera.position.set(636,-8784,-5531);
+					$("#roomChatContent").css({display:"block"})
+					$("#roomForm").css({display: "flex"})
+					break;
+				}
 				case "KeyQ" : {
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
@@ -899,6 +901,39 @@ class Game{
 		raycaster.setFromCamera( mouse, this.camera );
 
 		const target=raycaster.intersectObjects(this.colliders)
+		const intersects = raycaster.intersectObjects( this.remoteColliders );
+		const chat = document.getElementById('chat');
+
+		if (intersects.length>0){
+			const object = intersects[0].object;
+			const players = this.remotePlayers.filter( function(player){
+				if (player.collider!==undefined && player.collider === object){
+					return true;
+				}
+			});
+			if (players.length>0){
+				const player = players[0];
+				console.log(`onMouseDown: player ${player.id}`);
+				this.speechBubble.player = player;
+				this.speechBubble.update('');
+				this.scene.add(this.speechBubble.mesh);
+				this.chatSocketId = player.id;
+				chat.style.bottom = '0px';
+				this.activeCamera = this.cameras.chat;
+			}
+		}else{
+			//Is the chat panel visible?
+			if (chat.style.bottom === '0px' && (window.innerHeight - event.clientY)>40){
+				console.log("onMouseDown: No player found");
+				if (this.speechBubble.mesh.parent!==null) this.speechBubble.mesh.parent.remove(this.speechBubble.mesh);
+				delete this.speechBubble.player;
+				delete this.chatSocketId;
+				chat.style.bottom = '-50px';
+				this.activeCamera = this.cameras.back;
+			}else{
+				console.log("onMouseDown: typing");
+			}
+		}
 		if(target.length>0){
 			console.log(target[0])
 			if (target[0].object.parent.name === "KH_TowerHigh003"){
@@ -1187,39 +1222,7 @@ class Game{
 				}
 			}
 		}
-		const intersects = raycaster.intersectObjects( this.remoteColliders );
-		const chat = document.getElementById('chat');
-
-		if (intersects.length>0){
-			const object = intersects[0].object;
-			const players = this.remotePlayers.filter( function(player){
-				if (player.collider!==undefined && player.collider === object){
-					return true;
-				}
-			});
-			if (players.length>0){
-				const player = players[0];
-				console.log(`onMouseDown: player ${player.id}`);
-				this.speechBubble.player = player;
-				this.speechBubble.update('');
-				this.scene.add(this.speechBubble.mesh);
-				this.chatSocketId = player.id;
-				chat.style.bottom = '0px';
-				this.activeCamera = this.cameras.chat;
-			}
-		}else{
-			//Is the chat panel visible?
-			if (chat.style.bottom === '0px' && (window.innerHeight - event.clientY)>40){
-				console.log("onMouseDown: No player found");
-				if (this.speechBubble.mesh.parent!==null) this.speechBubble.mesh.parent.remove(this.speechBubble.mesh);
-				delete this.speechBubble.player;
-				delete this.chatSocketId;
-				chat.style.bottom = '-50px';
-				this.activeCamera = this.cameras.back;
-			}else{
-				console.log("onMouseDown: typing");
-			}
-		}
+		
 	}
 
 	getRemotePlayerById(id){
@@ -1942,8 +1945,23 @@ function closeRobot() {
 	$('#closeButton').remove()
 }
 
-function sendRoomChat() {
+function sendRoomChat() { // send room chat
+	const socket = io.connect();
+	// send
 	if(document.getElementById("roomInput").value === "" ) return;
-	// TODO: emit()
-	// alert(document.getElementById("roomInput").value)
+	console.log(document.getElementById("roomInput").value)
+	var chatMessage = {}
+	chatMessage.message = document.getElementById("roomInput").value
+	chatMessage.stage = game.stage
+	chatMessage.username = game.username
+
+	socket.emit('roomChat', chatMessage)
+	document.getElementById("roomInput").value = ""
+
+	// recv
+	socket.on('roomChat', function(data) {
+		console.log(data)
+		var chatMessage = data
+		$('#roomChatContent').append('<li>' + chatMessage + '</li>')
+	})
 }

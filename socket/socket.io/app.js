@@ -46,6 +46,16 @@ io.sockets.on('connection', function(socket){
 		console.log(`chat message:${data.id} ${data.message}`);
 		io.to(data.id).emit('chat message', { id: socket.id, message: data.message });
 	})
+
+	// send chat message to room
+	socket.on('roomChat', function(data){
+		// data: username, stage, message
+		console.log(`roomChat:${data.stage} ${data.message}`);
+		console.log(`A new user joined room ${data.stage}`);
+		socket.stage = data.stage;
+		socket.join(data.stage);
+		io.in(data.stage).emit('roomChat', `${data.username}: ${data.message}` );
+	});
 });
 
 http.listen(2002, function(){
