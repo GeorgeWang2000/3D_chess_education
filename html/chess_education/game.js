@@ -1131,7 +1131,7 @@ class Game{
 				if ( target[0].object.name === "sphere00") {
 					game.showSphere("sphere00", "black")
 					setTimeout(function () {
-						alert("恭喜你！通过了所有的关卡！")
+						alert("恭喜你！通过了所有的关卡！你现在已经解锁了所有10个角色！")
 						$("#roomChatContent").css({display:"none"})
 						$("#roomForm").css({display: "none"})
 						game.faultTime = 0;
