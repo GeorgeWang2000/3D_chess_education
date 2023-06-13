@@ -223,17 +223,17 @@ class Game{
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
 				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z);break;
-				case "Backspace" : {
-					this.activeCamera = this.cameras.tower;
-					this.stageDispatch(this.stage)
-					this.blocked = true;
-					this.faultTime = 0;
-					this.initControls();
-					this.camera.position.set(636,-8784,-5531);
-					$("#roomChatContent").css({display:"block"})
-					$("#roomForm").css({display: "flex"})
-					break;
-				}
+				// case "Backspace" : {
+				// 	this.activeCamera = this.cameras.tower;
+				// 	this.stageDispatch(this.stage)
+				// 	this.blocked = true;
+				// 	this.faultTime = 0;
+				// 	this.initControls();
+				// 	this.camera.position.set(636,-8784,-5531);
+				// 	$("#roomChatContent").css({display:"block"})
+				// 	$("#roomForm").css({display: "flex"})
+				// 	break;
+				// }
 				case "KeyQ" : {
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
@@ -332,6 +332,8 @@ class Game{
 	}
 
 	stageDispatch(stage) {
+
+		document.getElementById("roomChatContent").innerHTML = ""
 
 		if(game.scene.getObjectByName("stageDirection") !== null) {
 			game.scene.remove(game.scene.getObjectByName("stageDirection"))
@@ -982,6 +984,7 @@ class Game{
 					setTimeout(function () {
 						alert("恭喜你！答对啦！进入下一关")
 						game.stageDispatch(++game.stage)
+
 						game.faultTime = 0;
 					}, 1000)
 				} else if ( !stage1BlackList.includes(target[0].object.name.substring(6)) && !stage1WhiteList.includes(target[0].object.name.substring(6))) {
@@ -1222,7 +1225,7 @@ class Game{
 				}
 			}
 		}
-		
+
 	}
 
 	getRemotePlayerById(id){
