@@ -47,12 +47,19 @@ io.sockets.on('connection', function(socket){
 		io.to(data.id).emit('chat message', { id: socket.id, message: data.message });
 	})
 
+	socket.on('roomJoin', function(data){
+		// data: username, stage
+		console.log(`roomJoin:${data.stage}`);
+		console.log(`A new user joined room ${data.stage}`);
+		socket.stage = data.stage;
+		socket.join(data.stage);
+	});
+
 	// send chat message to room
 	socket.on('roomChat', function(data){
 		// data: username, stage, message
-		console.log(`roomChat:${data.stage} ${data.message}`);
-		console.log(`A new user joined room ${data.stage}`);
 		socket.stage = data.stage;
+		console.log(`roomChat:${data.stage} ${data.message}`);
 		socket.join(data.stage);
 		io.in(data.stage).emit('roomChat', `${data.username}: ${data.message}` );
 	});

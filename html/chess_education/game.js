@@ -225,17 +225,17 @@ class Game{
 		window.addEventListener('keydown',ev => {
 			switch (ev.code) {
 				case "Enter" : alert("x" + this.player.object.position.x + "y" + this.player.object.position.y + "z" + this.player.object.position.z);break;
-				// case "Backspace" : {
-				// 	this.activeCamera = this.cameras.tower;
-				// 	this.stageDispatch(this.stage)
-				// 	this.blocked = true;
-				// 	this.faultTime = 0;
-				// 	this.initControls();
-				// 	this.camera.position.set(636,-8784,-5531);
-				// 	$("#roomChatContent").css({display:"block"})
-				// 	$("#roomForm").css({display: "flex"})
-				// 	break;
-				// }
+				case "Backspace" : {
+					this.activeCamera = this.cameras.tower;
+					this.stageDispatch(this.stage)
+					this.blocked = true;
+					this.faultTime = 0;
+					this.initControls();
+					this.camera.position.set(636,-8784,-5531);
+					$("#roomChatContent").css({display:"block"})
+					$("#roomForm").css({display: "flex"})
+					break;
+				}
 				case "KeyQ" : {
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
@@ -343,6 +343,30 @@ class Game{
 
 		var text = ""
 
+		// join room
+		const socket = io.connect();
+		socket.emit('joinRoom', {stage: stage, username: game.username})
+
+		var chatMessage = {"message": "进入游戏" + stage + "号房间", "stage": game.stage, "username": game.username}
+		socket.emit('roomChat', chatMessage)
+
+		// recv
+		socket.on('roomChat', function(data) {
+			console.log("recv")
+			$('#roomChatContent').append('<li>' + data + '</li>')
+		})
+
+		// send
+		$("#roomSend").click(function() {
+			if(document.getElementById("roomInput").value === "" ) return;
+			console.log(document.getElementById("roomInput").value)
+			var chatMessage = {"message": document.getElementById("roomInput").value, "stage": game.stage, "username": game.username}
+			socket.emit('roomChat', chatMessage)
+			document.getElementById("roomInput").value = ""
+		})
+	
+
+
 
 		switch (stage) {
 			default:
@@ -383,6 +407,8 @@ class Game{
 				break;
 			}
 		}
+
+		
 
 		new THREE.FontLoader().load('./assets/font/DeYiHei.json', function(font) {
 			//加入立体文字
@@ -1958,25 +1984,7 @@ function closeRobot() {
 	$('#closeButton').remove()
 }
 
-function sendRoomChat() { // send room chat
-	const socket = io.connect();
-	// send
-	if(document.getElementById("roomInput").value === "" ) return;
-	console.log(document.getElementById("roomInput").value)
-	var chatMessage = {}
-	chatMessage.message = document.getElementById("roomInput").value
-	chatMessage.stage = game.stage
-	chatMessage.username = game.username
-
-	socket.emit('roomChat', chatMessage)
-	document.getElementById("roomInput").value = ""
-
-	// recv
-	socket.on('roomChat', function(data) {
-		console.log(data)
-		var chatMessage = data
-		$('#roomChatContent').append('<li>' + chatMessage + '</li>')
-	})
+function sendRoomChat() {
 }
 
 function getStage() {
