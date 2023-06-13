@@ -149,6 +149,7 @@ class Game{
 		this.controls.dampingFactor = 0.25;
 		this.controls.enableZoom = true;
 		this.controls.enableKeys = false;
+		this.controls.enablePan = false;
 		this.controls.minDistance = 1000;
 		this.controls.maxDistance = 2000;
 	}
