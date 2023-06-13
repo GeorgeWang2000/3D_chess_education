@@ -5,11 +5,11 @@ const KEY_D = "KeyD";
 
 const robotSay = "欢迎来到围棋小镇！\n" +
 	"你可以在小镇内随意走动，或点击小镇中别的玩家与他们对话。\n" +
-	"你可以按r离开围棋小镇。\n"+
+	"你可以按Tab离开围棋小镇。\n"+
 	"小镇中有8块立牌，上面有一些围棋的基础知识供你学习。\n" +
 	"看到对面的塔了吗？当你完成学习后，靠近塔并点击它。里面有六道关卡在等着你。\n" +
 	"不用担心，你可以和跟你在同一个关卡里的人交流。当你错误次数太多，我也会给你提示。\n" +
-	"你也可以随时按q键回到广场继续学习。\n"+
+	"你也可以随时Esc回到广场继续学习。\n"+
 	"如果你能顺利做对所有的题目，那你已经入门围棋啦！\n" +
 	"希望你在小镇中玩的愉快^^"
 
@@ -236,7 +236,7 @@ class Game{
 					$("#roomForm").css({display: "flex"})
 					break;
 				}
-				case "KeyQ" : {
+				case "Esc" : {
 					this.activeCamera  =this.cameras.back;
 					this.blocked = false;
 					this.stage = 1;
@@ -246,6 +246,9 @@ class Game{
 					$("#roomChatContent").css({display:"none"})
 					$("#roomForm").css({display: "none"})
 					break;
+				}
+				case "Tab" : {
+					window.location.href = "localhost:80/profile"
 				}
 			}
 		})
@@ -364,7 +367,7 @@ class Game{
 			socket.emit('roomChat', chatMessage)
 			document.getElementById("roomInput").value = ""
 		})
-	
+
 
 
 
@@ -408,7 +411,7 @@ class Game{
 			}
 		}
 
-		
+
 
 		new THREE.FontLoader().load('./assets/font/DeYiHei.json', function(font) {
 			//加入立体文字
