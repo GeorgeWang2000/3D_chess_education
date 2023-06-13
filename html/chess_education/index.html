@@ -151,6 +151,28 @@
 			#roomSend:hover {
 				background-color: #EBB36B;
 			}
+			#selectorDiv {
+				display: none;
+				position: absolute;
+				width: 300px;
+				top: 100px;
+				left: 40%;
+				background: white;
+				opacity: 0.8;
+				border-radius: 45px;
+				border: black 1px solid;
+			}
+			#word {
+				color: black;
+				font-size: 15px;
+				padding-left: 20px;
+			}
+			#stageSelector {
+				margin-left: 20px;
+			}
+			#buttonDiv {
+				margin-left: 20px;
+			}
 			form { background: #000; padding: 3px; width: 100%; }
       		form input { border: 0; padding: 10px; width: 88%; margin-right: .5%; }
       		form button { width: 8%; background: rgb(130, 224, 255); border: none; padding: 10px; }
@@ -176,6 +198,13 @@
 		<div id="roomForm">
 			<input id="roomInput" /><button id="roomSend" onclick="sendRoomChat()">Send</button>
 		</div>
+		<div id="selectorDiv">
+			<div id="word">请选择关卡</div>
+			<select id="stageSelector">
+			</select>
+			<div id="buttonDiv"><button onclick="getStage()">确定</button><button onclick="cancel()">取消</button></div>
+		</div>
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
 		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
@@ -190,8 +219,8 @@
 		<script>
 			var game;
 			document.addEventListener("DOMContentLoaded", function(){
-				//  var url = window.location.href
-				var url = "localhost:2002?email=1044631054&cloth=2"
+				 var url = window.location.href
+				// var url = "localhost:2002?email=1044631054&cloth=2"
 				var username = url.split("email=")[1].split("&cloth=")[0]
 				var role = parseInt(url.split("cloth=")[1].charAt(0))
 				game = new Game();

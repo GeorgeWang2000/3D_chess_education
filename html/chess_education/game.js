@@ -892,6 +892,19 @@ class Game{
 		this.remotePlayers.forEach(function(player){ player.update( dt ); });
 	}
 
+
+	setSelector() {
+
+		$("#selectorDiv").css({display: "block"})
+		//TODO: 从后端读取关卡
+		var stage = 3;
+		document.getElementById("stageSelector").innerHTML = ""
+		for(var i = 1; i <= stage; i++) {
+			document.getElementById("stageSelector").appendChild(new Option(i,i) )
+		}
+
+	}
+
 	onMouseDown( event ) {
 		// if (this.remoteColliders===undefined || this.remoteColliders.length==0 || this.speechBubble===undefined || this.speechBubble.mesh===undefined) return;
 
@@ -944,17 +957,7 @@ class Game{
 				this.forward = 0;
 				this.turn = 0;
 				this.playerControl(0,0)
-				alert("请选择关卡：");
-				// TODO：从后端读取可以游玩的关卡数
-				this.stage = 1;
-				this.activeCamera = this.cameras.tower;
-				this.stageDispatch(this.stage)
-				this.blocked = true;
-				this.faultTime = 0;
-				this.initControls();
-				this.camera.position.set(636,-8784,-5531);
-				$("#roomChatContent").css({display:"block"})
-				$("#roomForm").css({display: "flex"})
+				this.setSelector()
 			}
 
 			if(target[0].object.parent.name === "areaLight7") {
@@ -1974,4 +1977,21 @@ function sendRoomChat() { // send room chat
 		var chatMessage = data
 		$('#roomChatContent').append('<li>' + chatMessage + '</li>')
 	})
+}
+
+function getStage() {
+	game.stage = parseInt($("#stageSelector").val())
+	game.activeCamera = game.cameras.tower;
+	game.stageDispatch(game.stage)
+	game.blocked = true;
+	game.faultTime = 0;
+	game.initControls();
+	game.camera.position.set(636,-8784,-5531);
+	cancel();
+	$("#roomChatContent").css({display:"block"})
+	$("#roomForm").css({display: "flex"})
+}
+
+function cancel() {
+	$("#selectorDiv").css({display:"none"})
 }
