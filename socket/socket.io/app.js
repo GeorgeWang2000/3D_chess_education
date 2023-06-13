@@ -52,7 +52,6 @@ io.sockets.on('connection', function(socket){
 		console.log(`roomJoin:${data.stage}`);
 		console.log(`A new user joined room ${data.stage}`);
 		socket.stage = data.stage;
-		socket.join(data.stage);
 	});
 
 	// send chat message to room
@@ -63,6 +62,12 @@ io.sockets.on('connection', function(socket){
 		socket.join(data.stage);
 		io.in(data.stage).emit('roomChat', `${data.username}: ${data.message}` );
 	});
+
+	socket.on('roomLeave', function(data){
+		// data: username, stage
+		console.log(`roomLeave:${data.stage}`);
+		socket.leave(data.stage);
+	})
 });
 
 http.listen(2002, function(){

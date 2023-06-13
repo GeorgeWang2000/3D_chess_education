@@ -73,6 +73,8 @@ class Game{
 		this.faultTime = 0;
 		this.role = 1;
 
+		this.roomSocket;
+
 		this.remotePlayers = [];
 		this.remoteColliders = [];
 		this.initialisingPlayers = [];
@@ -195,6 +197,8 @@ class Game{
 		this.loadEnvironment(loader);
 
 		this.player = new PlayerLocal(this);
+
+		this.roomSocket = io.connect();
 
 
 
@@ -347,14 +351,15 @@ class Game{
 		var text = ""
 
 		// join room
-		const socket = io.connect();
-		socket.emit('joinRoom', {stage: stage, username: game.username})
-
+		// this.roomSocket.emit('joinRoom', {stage: stage, username: game.username})
+		this.roomSocket.disconnect()
+		this.roomSocket = io.connect()
+		this.roomSocket.emit('roomJoin', {stage: stage, username: game.username})
 		var chatMessage = {"message": "进入游戏" + stage + "号房间", "stage": game.stage, "username": game.username}
-		socket.emit('roomChat', chatMessage)
+		this.roomSocket.emit('roomChat', chatMessage)
 
 		// recv
-		socket.on('roomChat', function(data) {
+		this.roomSocket.on('roomChat', function(data) {
 			console.log("recv")
 			$('#roomChatContent').append('<li>' + data + '</li>')
 		})
@@ -364,7 +369,7 @@ class Game{
 			if(document.getElementById("roomInput").value === "" ) return;
 			console.log(document.getElementById("roomInput").value)
 			var chatMessage = {"message": document.getElementById("roomInput").value, "stage": game.stage, "username": game.username}
-			socket.emit('roomChat', chatMessage)
+			game.roomSocket.emit('roomChat', chatMessage)
 			document.getElementById("roomInput").value = ""
 		})
 
