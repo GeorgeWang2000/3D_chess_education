@@ -252,7 +252,7 @@ class Game{
 					break;
 				}
 				case "Tab" : {
-					window.location.href = "//localhost:80/profile"
+					window.location.href = "//124.221.137.186/profile"
 				}
 			}
 		})
@@ -2023,7 +2023,7 @@ function cancel() {
 
 function sendUpdate() {
 	var data = {email:game.username,schedule:game.stage}
-	var url = "http://localhost:8080/api/user/updateSchedule"
+	var url = "http://124.221.137.186:8080/api/user/updateSchedule"
 	console.log(data)
 	$.post(url,data,function (data) {
 		console.log(data)
@@ -2031,7 +2031,7 @@ function sendUpdate() {
 }
 
 function getClearStage(callback) {
-	var url = "http://localhost:8080/api/user/getSchedule";
+	var url = "http://124.221.137.186:8080/api/user/getSchedule";
 	var data = { email: game.username };
 	$.get(url, data, function(data) {
 		callback(data.data);
