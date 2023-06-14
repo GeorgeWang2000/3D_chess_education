@@ -252,7 +252,7 @@ class Game{
 					break;
 				}
 				case "Tab" : {
-					window.location.href = "//124.221.137.186/profile"
+					history.back()
 				}
 			}
 		})
