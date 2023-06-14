@@ -928,15 +928,14 @@ class Game{
 
 
 	setSelector() {
-
 		$("#selectorDiv").css({display: "block"})
-		//TODO: 从后端读取关卡
-		var stage = 3;
+		stage = getClearStage()
+			.then((stage) => {		
+				for(var i = 1; i <= stage; i++) {
+					document.getElementById("stageSelector").appendChild(new Option(i,i) )
+				}
+			})
 		document.getElementById("stageSelector").innerHTML = ""
-		for(var i = 1; i <= stage; i++) {
-			document.getElementById("stageSelector").appendChild(new Option(i,i) )
-		}
-
 	}
 
 	onMouseDown( event ) {
@@ -1022,7 +1021,7 @@ class Game{
 					}, 250)
 					setTimeout(function () {
 						alert("恭喜你！答对啦！进入下一关")
-						//TODO:更新关卡
+						sendUpdate()
 						game.stageDispatch(++game.stage)
 
 						game.faultTime = 0;
@@ -1057,7 +1056,7 @@ class Game{
 					}, 250)
 					setTimeout(function () {
 						alert("恭喜你！答对啦！进入下一关")
-						//TODO:更新关卡
+						sendUpdate()
 						game.stageDispatch(++game.stage)
 						game.faultTime = 0;
 					}, 1000)
@@ -1093,7 +1092,7 @@ class Game{
 					game.showSphere("sphere45", "black")
 					setTimeout(function () {
 						alert("恭喜你！答对啦！进入下一关")
-						//TODO:更新关卡
+						sendUpdate()
 						game.stageDispatch(++game.stage)
 						game.faultTime = 0;
 					}, 500)
@@ -1120,7 +1119,7 @@ class Game{
 					game.showSphere("sphere10", "black")
 					setTimeout(function () {
 						alert("恭喜你！答对啦！进入下一关")
-						//TODO:更新关卡
+						sendUpdate()
 						game.stageDispatch(++game.stage)
 						game.faultTime = 0;
 					}, 500)
@@ -1185,7 +1184,7 @@ class Game{
 						}, 250)
 						setTimeout(function () {
 							alert("恭喜你！答对啦！进入下一关")
-							//TODO:更新关卡
+							sendUpdate()
 							game.stageDispatch(++game.stage)
 							game.faultTime = 0;
 						}, 500)
@@ -1214,7 +1213,7 @@ class Game{
 					game.showSphere("sphere00", "black")
 					setTimeout(function () {
 						alert("恭喜你！通过了所有的关卡！你现在已经解锁了所有10个角色！")
-						//TODO:更新关卡
+						sendUpdate()
 						$("#roomChatContent").css({display:"none"})
 						$("#roomForm").css({display: "none"})
 						game.faultTime = 0;
@@ -2019,15 +2018,18 @@ function cancel() {
 }
 
 function sendUpdate() {
-	var data = {username:game.username,stage:game.stage}
-	var url = "localhost:8080/api/user/updateStage"
-	$.post(url,data,function (){
+	var data = {email:game.username,schedule:game.stage}
+	var url = "http://localhost:8080/api/user/updateSchedule"
+	console.log(data)
+	$.post(url,data,function (data) {
+		console.log(data)
 	})
 }
 
 function getClearStage() {
-	var url = "localhost:8080/api/user/getStage"
-	$.get(url,function (data) {
+	var url = "http://localhost:8080/api/user/getSchedule"
+	var data = {email:game.username}
+	$.get(url,data,function (data) {
 		return data
 	})
 }
