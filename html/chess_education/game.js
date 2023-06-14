@@ -928,14 +928,18 @@ class Game{
 
 
 	setSelector() {
-		$("#selectorDiv").css({display: "block"})
-		stage = getClearStage()
-			.then((stage) => {		
-				for(var i = 1; i <= stage; i++) {
-					document.getElementById("stageSelector").appendChild(new Option(i,i) )
-				}
-			})
-		document.getElementById("stageSelector").innerHTML = ""
+		document.getElementById("stageSelector").innerHTML = "";
+		$("#selectorDiv").css({ display: "block" });
+	
+		getClearStage(function(stage) {
+			console.log(stage);
+			if (stage !== 6) {
+				stage++;
+			}
+			for (var i = 1; i <= stage; i++) {
+				document.getElementById("stageSelector").appendChild(new Option(i, i));
+			}
+		});
 	}
 
 	onMouseDown( event ) {
@@ -2026,10 +2030,10 @@ function sendUpdate() {
 	})
 }
 
-function getClearStage() {
-	var url = "http://localhost:8080/api/user/getSchedule"
-	var data = {email:game.username}
-	$.get(url,data,function (data) {
-		return data
-	})
+function getClearStage(callback) {
+	var url = "http://localhost:8080/api/user/getSchedule";
+	var data = { email: game.username };
+	$.get(url, data, function(data) {
+		callback(data.data);
+	});
 }
